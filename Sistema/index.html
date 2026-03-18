@@ -850,8 +850,7 @@ function sair() {
     
     // Inicializar Firebase
     if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-      console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
+          console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
     }
 
     const database = firebase.database();
@@ -894,13 +893,6 @@ function sair() {
         return;
       }
     })();
-
-    // Logout (redirecionamento SEM BARRA)
-    window.logout = function() {
-      console.log("👋 Fazendo logout...");
-      localStorage.clear();
-      window.location.href = "login/";
-    };
 
     // Limpar dashboard
     window.limparDadosDashboard = function() {
