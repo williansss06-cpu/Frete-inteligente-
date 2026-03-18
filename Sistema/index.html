@@ -831,17 +831,10 @@ const firebaseConfig = {
   measurementId: "G-8QBM2TCPY8"
 };
 
-// 🔒 PROTEÇÃO
-const usuarioId = localStorage.getItem("usuario_id");
-
-if (!usuarioId) {
-  alert("Sessão expirada - Faça login novamente");
-  window.location.href = BASE + "/Login/index.html";
-}
-
 // 🚪 LOGOUT
 window.sair = function() {
-  alert("clicou sair");
+  localStorage.clear();
+  window.location.href = BASE + "/Login/index.html";
 }
     
     // Inicializar Firebase
