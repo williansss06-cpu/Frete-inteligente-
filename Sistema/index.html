@@ -816,7 +816,8 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-  <script>
+      <script>
+  const BASE = "/Frete-inteligente-"; // 👈 AQUI
     // 🔥 CONFIGURAÇÃO DO FIREBASE - SEUS DADOS
     const firebaseConfig = {
       apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
@@ -865,11 +866,10 @@
       }
 
       if (!perfil) {
-        alert("Perfil inválido");
-        window.location.href = "login/";
-        return;
-      }
-
+  alert("Perfil inválido");
+  window.location.href = BASE + "/Login/index.html";
+  return;
+}
       if (perfil !== "admin_plataforma" && !empresaId) {
         alert("Empresa não identificada");
         window.location.href = "login/";
