@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frete Inteligente | Cadastro da Empresa</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root{
+      --bg:#0f172a;
+      --bg-soft:#f8fafc;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --primary:#0f766e;
+      --primary-dark:#115e59;
+      --primary-soft:#ccfbf1;
+      --danger:#dc2626;
+      --success:#059669;
+      --shadow:0 20px 60px rgba(15,23,42,.14);
+      --radius:22px;
+    }
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(135deg,#0b1220 0%, #0f172a 35%, #115e59 100%);
+      color:#fff;
+      min-height:100vh;
+    }
+
+    .page{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+    }
+
+    .hero{
+      position:relative;
+      padding:64px 56px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(52,211,153,.20), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(45,212,191,.18), transparent 28%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,.08), transparent 30%);
+      pointer-events:none;
+    }
+
+    .hero-box{
+      position:relative;
+      z-index:2;
+      max-width:620px;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 14px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:20px;
+    }
+
+    .hero h1{
+      font-size:46px;
+      line-height:1.08;
+      margin:0 0 18px;
+    }
+
+    .hero p{
+      margin:0 0 28px;
+      color:#dbeafe;
+      font-size:17px;
+      line-height:1.7;
+      max-width:560px;
+    }
+
+    .benefits{
+      display:grid;
+      gap:12px;
+      max-width:520px;
+    }
+
+    .benefit{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(4px);
+    }
+
+    .benefit strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:15px;
+    }
+
+    .benefit span{
+      color:#dbeafe;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .panel{
+      background:var(--bg-soft);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:36px;
+    }
+
+    .card{
+      width:100%;
+      max-width:640px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-head{
+      padding:28px 28px 12px;
+    }
+
+    .card-head h2{
+      margin:0 0 8px;
+      font-size:30px;
+      color:var(--text);
+    }
+
+    .card-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .progress{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      padding:18px 28px 8px;
+    }
+
+    .step{
+      padding:12px 14px;
+      border-radius:14px;
+      background:#f1f5f9;
+      border:1px solid var(--line);
+      font-size:13px;
+      font-weight:700;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .step.active{
+      background:var(--primary-soft);
+      border-color:#99f6e4;
+      color:#134e4a;
+    }
+
+    .step.done{
+      background:#dcfce7;
+      border-color:#86efac;
+      color:#166534;
+    }
+
+    form{
+      padding:20px 28px 30px;
+    }
+
+    .section-title{
+      margin:18px 0 14px;
+      font-size:14px;
+      font-weight:700;
+      color:#334155;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .full{ grid-column:1 / -1; }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-size:13px;
+      font-weight:700;
+      color:#334155;
+    }
+
+    input, select, textarea{
+      width:100%;
+      border:1px solid #cbd5e1;
+      border-radius:14px;
+      padding:13px 14px;
+      font-size:14px;
+      background:#fff;
+      color:#0f172a;
+    }
+
+    input:focus, select:focus, textarea:focus{
+      outline:none;
+      border-color:#14b8a6;
+      box-shadow:0 0 0 4px rgba(20,184,166,.12);
+    }
+
+    textarea{
+      min-height:88px;
+      resize:vertical;
+    }
+
+    .help{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .plan-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:8px;
+    }
+
+    .plan{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      cursor:pointer;
+      background:#fff;
+      transition:.2s ease;
+    }
+
+    .plan:hover{
+      transform:translateY(-1px);
+      border-color:#94a3b8;
+    }
+
+    .plan.active{
+      border:2px solid var(--primary);
+      background:#f0fdfa;
+    }
+
+    .plan h3{
+      margin:0 0 8px;
+      font-size:16px;
+    }
+
+    .plan .price{
+      font-size:22px;
+      font-weight:800;
+      margin-bottom:8px;
+      color:#0f172a;
+    }
+
+    .plan .desc{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .summary{
+      margin-top:18px;
+      padding:16px;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      border-radius:16px;
+    }
+
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 0;
+      border-bottom:1px dashed #e2e8f0;
+      font-size:14px;
+    }
+
+    .summary-row:last-child{ border-bottom:none; }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:22px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:14px 16px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+      flex:1;
+    }
+
+    .btn-primary:hover{ background:var(--primary-dark); }
+
+    .btn-secondary{
+      background:#fff;
+      border:1px solid var(--line);
+      color:#0f172a;
+    }
+
+    .msg{
+      margin-top:14px;
+      min-height:20px;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .msg.error{ color:var(--danger); }
+    .msg.success{ color:var(--success); }
+
+    .footer-note{
+      margin-top:18px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    @media (max-width: 1100px){
+      .page{ grid-template-columns:1fr; }
+      .hero{ min-height:360px; }
+    }
+
+    @media (max-width: 760px){
+      .hero{ padding:34px 24px; }
+      .hero h1{ font-size:34px; }
+      .panel{ padding:18px; }
+      .card-head, form, .progress{ padding-left:18px; padding-right:18px; }
+      .grid, .plan-grid{ grid-template-columns:1fr; }
+      .actions{ flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="hero-box">
+        <div class="tag">🚚 Plataforma SaaS Logística</div>
+        <h1>Cadastre sua empresa e comece a operar com inteligência de frete</h1>
+        <p>
+          Estruture sua operação com simulação, base de rotas, controle de usuários,
+          benchmark de mercado e visão executiva em uma única plataforma.
+        </p>
+
+        <div class="benefits">
+          <div class="benefit">
+            <div>✅</div>
+            <div>
+              <strong>Ambiente exclusivo por empresa</strong>
+              <span>Cada cliente acessa apenas seus usuários, rotas, simulações e resultados.</span>
+            </div>
+          </div>
+
+          <div class="benefit">
+            <div>📊</div>
+            <div>
+              <strong>Operação e gestão no mesmo lugar</strong>
+              <span>Simule fretes, compare mercado, organize transportadoras e acompanhe saving.</span>
+            </div>
+          </div>
+
+          <div class="benefit">
+            <div>🔐</div>
+            <div>
+              <strong>Estrutura pronta para SaaS</strong>
+              <span>Controle de plano, perfil, empresa, segurança e escalabilidade desde o início.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="card">
+        <div class="card-head">
+          <h2>Cadastro da Empresa</h2>
+          <p>
+            Preencha os dados da empresa e do administrador principal. Após concluir,
+            sua conta será criada e vinculada automaticamente ao ambiente da empresa.
+          </p>
+        </div>
+
+        <div class="progress">
+          <div class="step active">1. Empresa</div>
+          <div class="step active">2. Administrador</div>
+          <div class="step active">3. Plano inicial</div>
+        </div>
+
+        <form id="cadastroEmpresaForm">
+          <div class="section-title">Dados da empresa</div>
+
+          <div class="grid">
+            <div class="full">
+              <label for="empresa_nome">Nome da empresa</label>
+              <input id="empresa_nome" placeholder="Ex.: Global Logística" />
+            </div>
+
+            <div>
+              <label for="empresa_cnpj">CNPJ</label>
+              <input id="empresa_cnpj" maxlength="18" placeholder="00.000.000/0000-00" />
+              <div class="help">Apenas um cadastro por CNPJ.</div>
+            </div>
+
+            <div>
+              <label for="empresa_segmento">Segmento</label>
+              <select id="empresa_segmento">
+                <option value="">Selecione</option>
+                <option value="industria">Indústria</option>
+                <option value="varejo">Varejo</option>
+                <option value="distribuicao">Distribuição</option>
+                <option value="transportes">Transportes</option>
+                <option value="ecommerce">E-commerce</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="empresa_cidade">Cidade</label>
+              <input id="empresa_cidade" placeholder="Ex.: Guarulhos" />
+            </div>
+
+            <div>
+              <label for="empresa_uf">UF</label>
+              <input id="empresa_uf" maxlength="2" placeholder="SP" />
+            </div>
+
+            <div class="full">
+              <label for="empresa_obs">Observações iniciais</label>
+              <textarea id="empresa_obs" placeholder="Ex.: operação focada em fracionado, dedicado, transferências, etc."></textarea>
+            </div>
+          </div>
+
+          <div class="section-title">Administrador principal</div>
+
+          <div class="grid">
+            <div class="full">
+              <label for="admin_nome">Nome completo</label>
+              <input id="admin_nome" placeholder="Nome do responsável" />
+            </div>
+
+            <div>
+              <label for="admin_email">E-mail</label>
+              <input id="admin_email" type="email" placeholder="responsavel@empresa.com" />
+            </div>
+
+            <div>
+              <label for="admin_telefone">Telefone / WhatsApp</label>
+              <input id="admin_telefone" placeholder="(11) 99999-9999" />
+            </div>
+
+            <div class="full">
+              <label for="admin_senha">Senha</label>
+              <input id="admin_senha" type="password" placeholder="Crie uma senha segura" />
+              <div class="help">Mínimo recomendado: 6 caracteres.</div>
+            </div>
+          </div>
+
+          <div class="section-title">Plano inicial</div>
+
+          <div class="plan-grid" id="planGrid">
+            <div class="plan active" data-plan="free">
+              <h3>Starter</h3>
+              <div class="price">R$ 0</div>
+              <div class="desc">Até 3 usuários, operação inicial e estrutura para ativação.</div>
+            </div>
+
+            <div class="plan" data-plan="pro">
+              <h3>Pro</h3>
+              <div class="price">R$ 299</div>
+              <div class="desc">Equipe ampliada, dashboards e operação mais robusta.</div>
+            </div>
+
+            <div class="plan" data-plan="enterprise">
+              <h3>Enterprise</h3>
+              <div class="price">Sob consulta</div>
+              <div class="desc">Alta escala, governança avançada e acompanhamento executivo.</div>
+            </div>
+          </div>
+
+          <div class="summary">
+            <div class="summary-row">
+              <span>Plano selecionado</span>
+              <strong id="resumo_plano">Starter</strong>
+            </div>
+            <div class="summary-row">
+              <span>Perfil inicial</span>
+              <strong>Administrador da empresa</strong>
+            </div>
+            <div class="summary-row">
+              <span>Status inicial</span>
+              <strong>Ativo</strong>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Criar empresa e começar</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='login/'">Já tenho conta</button>
+          </div>
+
+          <div id="msg" class="msg"></div>
+
+          <div class="footer-note">
+            Ao concluir o cadastro, a empresa será criada no sistema, o administrador principal será vinculado automaticamente
+            e o ambiente ficará pronto para uso conforme o plano selecionado.
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <script>
+    // 🔥 SEUS DADOS DO FIREBASE - CORRETOS!
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
+      authDomain: "rota-22c3b.firebaseapp.com",
+      databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com",
+      projectId: "rota-22c3b",
+      storageBucket: "rota-22c3b.firebasestorage.app",
+      messagingSenderId: "491665660350",
+      appId: "1:491665660350:web:fb79aa28f612d321c081ef",
+      measurementId: "G-8QBM2TCPY8"
+    };
+
+    // Inicializar Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
+    }
+
+    const db = firebase.database();
+    const auth = firebase.auth();
+
+    const form = document.getElementById("cadastroEmpresaForm");
+    const msg = document.getElementById("msg");
+    const planGrid = document.getElementById("planGrid");
+    const resumoPlano = document.getElementById("resumo_plano");
+
+    let planoSelecionado = "free";
+
+    // Utilitários
+    function onlyDigits(value) {
+      return String(value || "").replace(/\D/g, "");
+    }
+
+    function formatCNPJ(value) {
+      let v = onlyDigits(value).slice(0, 14);
+      v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+      v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+      v = v.replace(/(\d{4})(\d)/, "$1-$2");
+      return v;
+    }
+
+    // Formatação do CNPJ
+    document.getElementById("empresa_cnpj").addEventListener("input", (e) => {
+      e.target.value = formatCNPJ(e.target.value);
+    });
+
+    // Seleção de plano
+    document.querySelectorAll(".plan").forEach(plan => {
+      plan.addEventListener("click", () => {
+        document.querySelectorAll(".plan").forEach(p => p.classList.remove("active"));
+        plan.classList.add("active");
+        planoSelecionado = plan.dataset.plan;
+
+        const nomes = {
+          free: "Starter",
+          pro: "Pro",
+          enterprise: "Enterprise"
+        };
+
+        resumoPlano.textContent = nomes[planoSelecionado] || "Starter";
+      });
+    });
+
+    function getUsuariosLimite(plano) {
+      if (plano === "free") return 3;
+      if (plano === "pro") return 10;
+      return 999;
+    }
+
+    async function empresaJaExiste(cnpj) {
+      const snap = await db.ref("empresas").orderByChild("cnpj").equalTo(cnpj).once("value");
+      return snap.exists();
+    }
+
+    // Envio do formulário
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      msg.className = "msg";
+      msg.textContent = "";
+
+      // Capturar valores
+      const empresa_nome = document.getElementById("empresa_nome").value.trim();
+      const empresa_cnpj_formatado = document.getElementById("empresa_cnpj").value.trim();
+      const empresa_cnpj = onlyDigits(empresa_cnpj_formatado);
+      const empresa_segmento = document.getElementById("empresa_segmento").value.trim();
+      const empresa_cidade = document.getElementById("empresa_cidade").value.trim();
+      const empresa_uf = document.getElementById("empresa_uf").value.trim().toUpperCase();
+      const empresa_obs = document.getElementById("empresa_obs").value.trim();
+
+      const admin_nome = document.getElementById("admin_nome").value.trim();
+      const admin_email = document.getElementById("admin_email").value.trim();
+      const admin_telefone = document.getElementById("admin_telefone").value.trim();
+      const admin_senha = document.getElementById("admin_senha").value.trim();
+
+      // Validações
+      if (!empresa_nome || !empresa_cnpj || !admin_nome || !admin_email || !admin_senha) {
+        msg.className = "msg error";
+        msg.textContent = "Preencha os campos obrigatórios.";
+        return;
+      }
+
+      if (empresa_cnpj.length !== 14) {
+        msg.className = "msg error";
+        msg.textContent = "CNPJ inválido.";
+        return;
+      }
+
+      if (admin_senha.length < 6) {
+        msg.className = "msg error";
+        msg.textContent = "A senha deve ter pelo menos 6 caracteres.";
+        return;
+      }
+
+      try {
+        msg.textContent = "⏳ Criando empresa e usuário administrador...";
+        msg.className = "msg";
+
+        // Verificar se CNPJ já existe
+        const existe = await empresaJaExiste(empresa_cnpj);
+        if (existe) {
+          msg.className = "msg error";
+          msg.textContent = "Já existe uma empresa cadastrada com este CNPJ.";
+          return;
+        }
+
+        // Criar usuário no Firebase Auth
+        msg.textContent = "⏳ Criando conta de acesso...";
+        const credential = await auth.createUserWithEmailAndPassword(admin_email, admin_senha);
+        const uid = credential.user.uid;
+
+        // Criar empresa no Realtime Database
+        msg.textContent = "⏳ Registrando dados da empresa...";
+        const empresaRef = db.ref("empresas").push();
+        const empresa_id = empresaRef.key;
+
+        await empresaRef.set({
+          nome: empresa_nome,
+          nome_fantasia: empresa_nome,
+          cnpj: empresa_cnpj,
+          cnpj_formatado: empresa_cnpj_formatado,
+          segmento: empresa_segmento || "nao_informado",
+          cidade: empresa_cidade || "nao_informado",
+          uf: empresa_uf || "nao_informado",
+          observacoes: empresa_obs || "",
+          plano: planoSelecionado,
+          usuarios_limite: getUsuariosLimite(planoSelecionado),
+          status: "ativo",
+          criado_em: Date.now()
+        });
+
+        // Criar usuário administrador
+        await db.ref("usuarios/" + uid).set({
+          nome: admin_nome,
+          email: admin_email,
+          telefone: admin_telefone || "",
+          empresa_id: empresa_id,
+          perfil: "admin_empresa",
+          status: "ativo",
+          criado_em: Date.now()
+        });
+
+        // Salvar dados na sessão
+        localStorage.setItem("usuario_id", uid);
+        localStorage.setItem("usuario_nome", admin_nome);
+        localStorage.setItem("usuario_email", admin_email);
+        localStorage.setItem("empresa_id", empresa_id);
+        localStorage.setItem("perfil", "admin_empresa");
+        localStorage.setItem("cliente_cnpj", empresa_cnpj);
+        localStorage.setItem("cliente_cnpj_formatado", empresa_cnpj_formatado);
+
+        // Sucesso!
+        msg.className = "msg success";
+        msg.textContent = "✅ Empresa criada com sucesso! Redirecionando...";
+
+        console.log("✅ Cadastro completo:", { empresa_id, uid });
+
+        setTimeout(() => {
+          window.location.href = "empresa/";
+        }, 1500);
+
+      } catch (error) {
+        console.error("Erro no cadastro:", error);
+
+        let texto = "Erro ao criar empresa.";
+
+        if (error.code === "auth/email-already-in-use") {
+          texto = "Este e-mail já está em uso por outra conta.";
+        } else if (error.code === "auth/invalid-email") {
+          texto = "E-mail inválido.";
+        } else if (error.code === "auth/weak-password") {
+          texto = "Senha muito fraca. Use pelo menos 6 caracteres.";
+        } else if (error.code === "auth/network-request-failed") {
+          texto = "Erro de rede. Verifique sua conexão.";
+        }
+
+        msg.className = "msg error";
+        msg.textContent = texto;
+      }
+    });
+  </script>
+</body>
+</html>
