@@ -865,7 +865,7 @@ window.sair = function() {
     }
 
     // Proteger acesso (redirecionamentos SEM BARRA)
-    (function protegerSistema() {
+    })();
       const usuarioId = localStorage.getItem("usuario_id");
       const perfil = getPerfil();
       const empresaId = getEmpresaId();
