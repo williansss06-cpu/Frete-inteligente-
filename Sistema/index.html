@@ -850,7 +850,8 @@ function sair() {
     
     // Inicializar Firebase
     if (!firebase.apps.length) {
-          console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
+  firebase.initializeApp(firebaseConfig);
+  console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
     }
 
     const database = firebase.database();
@@ -876,9 +877,9 @@ function sair() {
       console.log("🔒 Verificando acesso:", { usuarioId, perfil, empresaId });
 
       if (!usuarioId) {
-        alert("Sessão expirada - Faça login novamente");
-       // 🔥 BASE DO PROJETO
-      const BASE = "/Frete-inteligente-";
+        if (!usuarioId) {
+  alert("Sessão expirada - Faça login novamente");
+  window.location.href = BASE + "/Login/index.html";
       return;
       }
 
