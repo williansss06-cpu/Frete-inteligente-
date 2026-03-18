@@ -1,42 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Frete Inteligente - Painel da Empresa</title>
+<meta charset="UTF-8">
+<title>Painel da Empresa</title>
 
 <style>
-* { box-sizing: border-box; }
-body { margin: 0; font-family: Arial; background: #f4f6f8; }
-.container { max-width: 1100px; margin: auto; padding: 28px; }
-
-.topbar {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 24px;
-}
-
-h1 { margin: 0; }
-.sub { color: #64748b; }
-
-.btn { background:#0f766e;color:#fff;border:none;padding:12px;border-radius:10px;cursor:pointer }
-
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-
-.card {
-  background: #fff; padding: 20px;
-  border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,.08);
-}
-
-input, select {
-  width:100%; padding:10px; margin-bottom:10px;
-  border-radius:10px; border:1px solid #ccc;
-}
-
-.msg { font-size: 13px; margin-top: 10px; }
-.sucesso { color: green; }
-.erro { color: red; }
-
-.usuario-item { padding:8px; border-bottom:1px solid #eee; }
+body { font-family: Arial; background: #f1f5f9; }
+.container { padding: 30px; }
+.card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+button { padding: 10px; background: #0f766e; color: white; border: none; border-radius: 6px; cursor: pointer; }
+input, select { width: 100%; padding: 10px; margin-bottom: 10px; }
+.topo { display:flex; justify-content:space-between; align-items:center; }
 </style>
 </head>
 
@@ -44,237 +18,148 @@ input, select {
 
 <div class="container">
 
-<div class="topbar">
-  <div>
-    <h1>Painel da Empresa</h1>
-    <div class="sub">Gestão de usuários</div>
-  </div>
-  <button class="btn" onclick="logout()">Sair</button>
+<div class="topo">
+  <h1>Painel da Empresa</h1>
+  <button onclick="sair()">Sair</button>
 </div>
 
-<div class="grid">
+<!-- 🔓 ACESSO AO SISTEMA -->
+<div class="card">
+  <h3>Acesso</h3>
+  <button onclick="abrirSistema()">Abrir Sistema</button>
+</div>
 
-<div class="card" id="areaUsuarios">
+<!-- 👥 CRIAR USUÁRIO -->
+<div class="card">
 <h3>Criar usuário</h3>
 
-<input id="usuario_nome" placeholder="Nome" />
-<input id="usuario_email" placeholder="Email" />
-<input id="usuario_senha" placeholder="Senha" type="password"/>
+<input id="nome" placeholder="Nome">
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
 
-<select id="usuario_perfil">
-<option value="admin_empresa">Admin</option>
-<option value="analista">Analista</option>
-<option value="operador">Operador</option>
+<select id="perfil">
+  <option value="admin_empresa">Admin</option>
+  <option value="operador">Operador</option>
 </select>
 
-<button class="btn" onclick="criarUsuario()">Criar</button>
-<div id="msg_usuario" class="msg"></div>
+<button onclick="criarUsuario()">Criar</button>
+<div id="msg"></div>
 </div>
 
+<!-- 📊 LISTA -->
 <div class="card">
-<h3>Acesso</h3>
-
-<button class="btn" onclick="abrirSistema()">Abrir Sistema</button>
-
-<hr>
-
-<div id="listaUsuarios">Carregando...</div>
+<h3>Usuários cadastrados</h3>
+<div id="listaUsuarios"></div>
 </div>
 
 </div>
-</div>
 
-<!-- FIREBASE SDK -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// 🔥 SEUS DADOS DO FIREBASE - CORRETOS!
+const BASE = "/Frete-inteligente-";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
+  apiKey: "SUA_API_KEY",
   authDomain: "rota-22c3b.firebaseapp.com",
-  databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com",
+  databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com/",
   projectId: "rota-22c3b",
-  storageBucket: "rota-22c3b.firebasestorage.app",
-  messagingSenderId: "491665660350",
-  appId: "1:491665660350:web:fb79aa28f612d321c081ef",
-  measurementId: "G-8QBM2TCPY8"
+  storageBucket: "rota-22c3b.appspot.com"
 };
 
-// Inicializar Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-  console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
-}
+firebase.initializeApp(firebaseConfig);
 
+const auth = firebase.auth();
 const db = firebase.database();
 
-// 🔑 Pegar ID da empresa do localStorage
-function getEmpresaId() {
-  return localStorage.getItem("empresa_id");
+
+// 🔐 PROTEÇÃO
+const usuario = localStorage.getItem("usuario_id");
+if (!usuario) {
+  window.location.href = BASE + "/Login/index.html";
 }
 
-// 🔒 Proteção de acesso
-(function protegerSistema() {
-  const usuarioId = localStorage.getItem("usuario_id");
-  const perfil = localStorage.getItem("perfil");
-  const empresaId = getEmpresaId();
-
-  console.log("🔒 Verificando acesso:", { usuarioId, perfil, empresaId });
-
-  if (!usuarioId || !empresaId) {
-    alert("Sessão inválida - Faça login novamente");
-    window.location.href = "Login/";
-    return;
-  }
-
-  if (perfil === "admin_plataforma") {
-    window.location.href = "admin/";
-  }
-})();
-
-// 🎯 Controle por perfil
-function aplicarPermissoes() {
-  const perfil = localStorage.getItem("perfil");
-  console.log("👤 Perfil:", perfil);
-
-  if (perfil === "admin_empresa") return;
-
-  if (perfil === "analista" || perfil === "operador") {
-    const areaUsuarios = document.getElementById("areaUsuarios");
-    if (areaUsuarios) areaUsuarios.style.display = "none";
-  }
+// 🧠 CONTROLE DE PERFIL
+const perfil = localStorage.getItem("perfil");
+if (perfil !== "admin_empresa") {
+  alert("Acesso restrito");
 }
 
-// 📊 Carregar usuários da empresa
-function carregarUsuarios() {
-  const lista = document.getElementById("listaUsuarios");
-  const empresaId = getEmpresaId();
 
-  if (!empresaId) {
-    lista.innerHTML = "Empresa não identificada";
-    return;
-  }
-
-  db.ref("usuarios")
-    .orderByChild("empresa_id")
-    .equalTo(empresaId)
-    .once("value", snap => {
-
-      if (!snap.exists()) {
-        lista.innerHTML = "Nenhum usuário cadastrado";
-        return;
-      }
-
-      let html = "";
-      snap.forEach(item => {
-        const u = item.val();
-        const statusIcon = u.status === 'ativo' ? '✅' : '⏳';
-
-        html += `<div class="usuario-item">
-          ${statusIcon} <strong>${u.nome || '-'}</strong> - ${u.email || '-'}
-          <span style="color:#666;font-size:12px">(${u.perfil || 'sem perfil'})</span>
-        </div>`;
-      });
-
-      lista.innerHTML = html;
-    })
-    .catch(err => {
-      console.error("Erro ao carregar usuários:", err);
-      lista.innerHTML = "Erro ao carregar usuários";
-    });
+// 🚪 LOGOUT
+function sair() {
+  auth.signOut().then(() => {
+    localStorage.clear();
+    window.location.href = BASE + "/Login/index.html";
+  });
 }
 
-// ➕ Criar novo usuário
+
+// 🔥 ABRIR SISTEMA (CORRIGIDO)
+function abrirSistema() {
+  window.location.href = BASE + "/Sistema/index.html";
+}
+
+
+// 👥 CRIAR USUÁRIO
 async function criarUsuario() {
-  const msg = document.getElementById("msg_usuario");
-  const empresaId = getEmpresaId();
-
-  const nome = document.getElementById("usuario_nome").value.trim();
-  const email = document.getElementById("usuario_email").value.trim();
-  const senha = document.getElementById("usuario_senha").value.trim();
-  const perfil = document.getElementById("usuario_perfil").value;
-
-  // Validações
-  if (!nome || !email || !senha) {
-    msg.innerText = "Preencha todos os campos";
-    msg.className = "msg erro";
-    return;
-  }
-
-  if (senha.length < 6) {
-    msg.innerText = "Senha deve ter 6+ caracteres";
-    msg.className = "msg erro";
-    return;
-  }
-
-  if (!empresaId) {
-    msg.innerText = "Empresa não identificada";
-    msg.className = "msg erro";
-    return;
-  }
+  const nome = document.getElementById("nome").value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+  const perfil = document.getElementById("perfil").value;
+  const msg = document.getElementById("msg");
 
   try {
-    // Verificar se email já existe
-    const emailSnap = await db.ref("usuarios")
-      .orderByChild("email")
-      .equalTo(email)
-      .once("value");
+    const cred = await auth.createUserWithEmailAndPassword(email, senha);
+    const uid = cred.user.uid;
 
-    if (emailSnap.exists()) {
-      msg.innerText = "Email já cadastrado";
-      msg.className = "msg erro";
-      return;
-    }
-
-    // Criar usuário
-    await db.ref("usuarios").push({
+    await db.ref("usuarios/" + uid).set({
       nome,
       email,
-      senha,
       perfil,
-      empresa_id: empresaId,
-      status: "ativo",
+      empresa_id: localStorage.getItem("empresa_id"),
       data_cadastro: Date.now()
     });
 
-    msg.innerText = "✅ Usuário criado!";
-    msg.className = "msg sucesso";
-
-    // Limpar campos
-    document.getElementById("usuario_nome").value = "";
-    document.getElementById("usuario_email").value = "";
-    document.getElementById("usuario_senha").value = "";
-
-    // Recarregar lista
+    msg.innerHTML = "Usuário criado com sucesso!";
     carregarUsuarios();
 
   } catch (error) {
-    console.error("Erro ao criar usuário:", error);
-    msg.innerText = "Erro ao criar usuário";
-    msg.className = "msg erro";
+    msg.innerHTML = error.message;
+    console.error(error);
   }
 }
 
-// 🚀 Abrir sistema de fretes
-function abrirSistema() {
-  console.log("🚀 Abrindo sistema...");
-  window.location.href = "sistema/";
+
+// 📊 LISTAR USUÁRIOS
+function carregarUsuarios() {
+  const lista = document.getElementById("listaUsuarios");
+  lista.innerHTML = "";
+
+  db.ref("usuarios").once("value").then(snapshot => {
+    const dados = snapshot.val();
+
+    for (let uid in dados) {
+      const user = dados[uid];
+
+      if (user.empresa_id === localStorage.getItem("empresa_id")) {
+        lista.innerHTML += `
+          <div>
+            ✔ ${user.nome} - ${user.email} (${user.perfil})
+          </div>
+        `;
+      }
+    }
+  });
 }
 
-// 🚪 Logout
-function logout() {
-  console.log("👋 Fazendo logout...");
-  localStorage.clear();
-  window.location.href = "/Frete-inteligente/Login/index.html";
-}
 
-// 🔥 Inicializar quando a página carregar
-window.addEventListener('load', function() {
-  console.log("📊 Inicializando painel...");
-  aplicarPermissoes();
-  carregarUsuarios();
-});
+// iniciar
+carregarUsuarios();
+
 </script>
 
 </body>
