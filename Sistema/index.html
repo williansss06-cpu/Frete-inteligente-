@@ -864,32 +864,33 @@ window.sair = function() {
       return localStorage.getItem("perfil");
     }
 
-    // Proteger acesso (redirecionamentos SEM BARRA)
-    })();
-      const usuarioId = localStorage.getItem("usuario_id");
-      const perfil = getPerfil();
-      const empresaId = getEmpresaId();
+  // 🔒 PROTEÇÃO
+(function protegerSistema() {
+  const usuarioId = localStorage.getItem("usuario_id");
+  const perfil = getPerfil();
+  const empresaId = getEmpresaId();
 
-      console.log("🔒 Verificando acesso:", { usuarioId, perfil, empresaId });
+  console.log("🔒 Verificando acesso:", { usuarioId, perfil, empresaId });
 
-      if (!usuarioId) {
-        if (!usuarioId) {
-  alert("Sessão expirada - Faça login novamente");
-  window.location.href = BASE + "/Login/index.html";
-      return;
-      }
+  if (!usuarioId) {
+    alert("Sessão expirada - Faça login novamente");
+    window.location.href = BASE + "/Login/index.html";
+    return;
+  }
 
-      if (!perfil) {
-  alert("Perfil inválido");
-  window.location.href = BASE + "/Login/index.html";
-  return;
-}
-      if (perfil !== "admin_plataforma" && !empresaId) {
-        alert("Empresa não identificada");
-        window.location.href = BASE + "/Login/index.html";
-        return;
-      }
-    })();
+  if (!perfil) {
+    alert("Perfil inválido");
+    window.location.href = BASE + "/Login/index.html";
+    return;
+  }
+
+  if (perfil !== "admin_plataforma" && !empresaId) {
+    alert("Empresa não identificada");
+    window.location.href = BASE + "/Login/index.html";
+    return;
+  }
+
+})();
 
     // Limpar dashboard
     window.limparDadosDashboard = function() {
