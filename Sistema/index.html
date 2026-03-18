@@ -889,7 +889,14 @@ window.sair = function() {
   }
 
 })();
-
+        
+// 🔒 BLOQUEAR BOTÃO VOLTAR (COLE AQUI 👇)
+window.history.pushState(null, "", window.location.href);
+window.onpopstate = function () {
+  window.history.pushState(null, "", window.location.href);
+  
+  };
+        
     // Limpar dashboard
     window.limparDadosDashboard = function() {
       const carrierChart = document.getElementById('carrierChart');
