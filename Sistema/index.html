@@ -398,7 +398,7 @@
       <div class="actions">
         <button class="btn secondary" id="btnInfo">Como usar</button>
         <button class="btn" id="btnAddBase">Adicionar simulação à base</button>
-        <button class="btn secondary" onclick="logout()">Sair</button>
+        <button onclick="sair()">Sair</button>
       </div>
     </div>
 
@@ -817,19 +817,40 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
       <script>
-  const BASE = "/Frete-inteligente-"; // 👈 AQUI
-    // 🔥 CONFIGURAÇÃO DO FIREBASE - SEUS DADOS
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
-      authDomain: "rota-22c3b.firebaseapp.com",
-      databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com",
-      projectId: "rota-22c3b",
-      storageBucket: "rota-22c3b.firebasestorage.app",
-      messagingSenderId: "491665660350",
-      appId: "1:491665660350:web:fb79aa28f612d321c081ef",
-      measurementId: "G-8QBM2TCPY8"
-    };
+        const BASE = "/Frete-inteligente-"; // 👈 só UMA vez
+        
+// 🔥 CONFIGURAÇÃO DO FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
+  authDomain: "rota-22c3b.firebaseapp.com",
+  databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com",
+  projectId: "rota-22c3b",
+  storageBucket: "rota-22c3b.appspot.com", // 👈 corrigido
+  messagingSenderId: "491665660350",
+  appId: "1:491665660350:web:fb79aa28f612d321c081ef",
+  measurementId: "G-8QBM2TCPY8"
+};
 
+// 🔥 INICIALIZA
+firebase.initializeApp(firebaseConfig);
+
+// 🔒 PROTEÇÃO
+const usuarioId = localStorage.getItem("usuario_id");
+
+if (!usuarioId) {
+  alert("Sessão expirada - Faça login novamente");
+  window.location.href = BASE + "/Login/index.html";
+}
+
+// 🚪 LOGOUT
+function sair() {
+  localStorage.removeItem("usuario_id");
+  localStorage.removeItem("perfil");
+  localStorage.removeItem("empresa_id");
+
+  window.location.href = BASE + "/Login/index.html";
+}
+    
     // Inicializar Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
