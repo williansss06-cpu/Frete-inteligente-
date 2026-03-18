@@ -6,28 +6,8 @@
 
 <script>
 
-// 🔍 VERIFICA LOGIN
-const usuario = localStorage.getItem("usuario_id");
-const perfil = localStorage.getItem("perfil");
-
-// 🔀 REDIRECIONAMENTO
-if (!usuario) {
-  window.location.href = "./Login/index.html";
-} else {
-
-  if (perfil === "admin_plataforma") {
-    window.location.href = "./Admin/index.html";
-  }
-
-  if (perfil === "admin_empresa" || perfil === "analista") {
-    window.location.href = "./empresa/index.html";
-  }
-
-  if (perfil === "operador") {
-    window.location.href = "./Sistema/index.html";
-  }
-
-}
+// 🚀 SEMPRE COMEÇA PELO LOGIN
+window.location.href = "/Frete-inteligente/Login/index.html";
 
 </script>
 
