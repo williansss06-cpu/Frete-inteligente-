@@ -1348,7 +1348,7 @@
     const auth = firebase.auth();
 
     // ==============================================
-    // VERIFICAÇÃO DE LOGIN (CORRIGIDA)
+    // VERIFICAÇÃO DE LOGIN
     // ==============================================
     (async function verificarLogin() {
       const usuarioId = localStorage.getItem("usuario_id");
@@ -1359,7 +1359,7 @@
 
       if (!usuarioId) {
         alert("Sessão expirada - Faça login novamente");
-        window.location.href = 'Login/index.html';  // ✅ CORRIGIDO
+        window.location.href = 'Login/index.html';
         return;
       }
 
@@ -1372,14 +1372,14 @@
           if (empresaData && empresaData.status === 'pendente') {
             alert('⏳ Sua empresa ainda está pendente de aprovação. Aguarde o administrador.');
             localStorage.clear();
-            window.location.href = 'Login/index.html';  // ✅ CORRIGIDO
+            window.location.href = 'Login/index.html';
             return;
           }
           
           if (empresaData && empresaData.status === 'inativo') {
             alert('❌ Empresa inativa. Contate o administrador.');
             localStorage.clear();
-            window.location.href = 'Login/index.html';  // ✅ CORRIGIDO
+            window.location.href = 'Login/index.html';
             return;
           }
         } catch (error) {
@@ -1423,12 +1423,12 @@
     window.sair = function() {
       if (confirm('Deseja realmente sair do sistema?')) {
         localStorage.clear();
-        window.location.href = 'index.html';
+        window.location.href = 'Login/index.html';
       }
     };
 
     // ==============================================
-    // FUNÇÕES DO MÓDULO ADMIN (CORRIGIDAS)
+    // FUNÇÕES DO MÓDULO ADMIN
     // ==============================================
 
     window.mudarAbaAdmin = function(aba, event) {
@@ -1450,12 +1450,10 @@
       };
       document.getElementById(abaMap[aba]).style.display = 'block';
       
-      // Carregar dados conforme a aba
       if (aba === 'empresas') carregarEmpresas();
       if (aba === 'usuarios') carregarTodosUsuarios();
     };
 
-    // Carregar empresas do Firebase
     async function carregarEmpresas() {
       try {
         const snapshot = await database.ref('empresas').once('value');
@@ -1526,7 +1524,6 @@
       }
     }
 
-    // Carregar todos os usuários
     async function carregarTodosUsuarios() {
       try {
         const snapshot = await database.ref('usuarios').once('value');
@@ -1595,7 +1592,6 @@
       }
     }
 
-    // Funções para gerenciar empresas (CORRIGIDAS)
     window.novaEmpresa = function() {
       if(confirm('📋 Deseja cadastrar uma nova empresa?\n\nVocê será redirecionado para a página de cadastro.')) {
         window.location.href = 'admin.html';
@@ -1609,9 +1605,7 @@
     window.aprovarEmpresa = async function(id) {
       if(confirm('✅ Confirmar aprovação desta empresa?')) {
         try {
-          await database.ref('empresas/' + id).update({
-            status: 'ativo'
-          });
+          await database.ref('empresas/' + id).update({ status: 'ativo' });
           alert('✅ Empresa aprovada com sucesso!');
           carregarEmpresas();
         } catch (error) {
@@ -1623,9 +1617,7 @@
     window.ativarEmpresa = async function(id) {
       if(confirm('✅ Ativar esta empresa?')) {
         try {
-          await database.ref('empresas/' + id).update({
-            status: 'ativo'
-          });
+          await database.ref('empresas/' + id).update({ status: 'ativo' });
           alert('✅ Empresa ativada!');
           carregarEmpresas();
         } catch (error) {
@@ -1637,9 +1629,7 @@
     window.suspenderEmpresa = async function(id) {
       if(confirm('⛔ Suspender esta empresa?')) {
         try {
-          await database.ref('empresas/' + id).update({
-            status: 'inativo'
-          });
+          await database.ref('empresas/' + id).update({ status: 'inativo' });
           alert('⛔ Empresa suspensa!');
           carregarEmpresas();
         } catch (error) {
@@ -1651,9 +1641,7 @@
     window.rejeitarEmpresa = async function(id) {
       if(confirm('❌ Rejeitar esta empresa?')) {
         try {
-          await database.ref('empresas/' + id).update({
-            status: 'inativo'
-          });
+          await database.ref('empresas/' + id).update({ status: 'inativo' });
           alert('❌ Empresa rejeitada!');
           carregarEmpresas();
         } catch (error) {
@@ -1665,9 +1653,7 @@
     window.reativarEmpresa = async function(id) {
       if(confirm('🔄 Reativar esta empresa?')) {
         try {
-          await database.ref('empresas/' + id).update({
-            status: 'ativo'
-          });
+          await database.ref('empresas/' + id).update({ status: 'ativo' });
           alert('🔄 Empresa reativada!');
           carregarEmpresas();
         } catch (error) {
@@ -1676,7 +1662,6 @@
       }
     };
 
-    // Funções para usuários
     window.editarUsuario = function(uid) {
       alert('Funcionalidade: Editar usuário');
     };
@@ -1688,17 +1673,14 @@
       }
     };
 
-    // Funções para planos
     window.novoPlano = function() {
       alert('Funcionalidade: Criar novo plano');
     };
 
-    // Função empresa
     window.salvarEmpresa = function() {
       alert('✅ Dados da empresa salvos!');
     };
 
-    // Carregar dados da empresa logada
     async function carregarDadosEmpresa() {
       const empresaId = localStorage.getItem('empresa_id');
       if (!empresaId) return;
@@ -1726,7 +1708,6 @@
       }
     }
 
-    // Controle de perfil
     (function controlarPermissoes() {
       const perfil = localStorage.getItem('perfil');
       const menuAdmin = document.getElementById('menu-admin');
@@ -1747,7 +1728,6 @@
         document.getElementById('menu-parametros').style.display = 'none';
       }
 
-      // Se for admin_plataforma, carregar empresas
       if (perfil === 'admin_plataforma') {
         setTimeout(() => {
           carregarEmpresas();
@@ -1755,7 +1735,6 @@
         }, 1000);
       }
 
-      // Carregar dados da empresa
       carregarDadosEmpresa();
     })();
 
@@ -1764,10 +1743,6 @@
     window.onpopstate = function () {
       window.history.pushState(null, '', window.location.href);
     };
-
-    // ==============================================
-    // SEU CÓDIGO ORIGINAL (mantido intacto)
-    // ==============================================
 
     window.limparDadosDashboard = function() {
       document.getElementById('carrierChart').innerHTML = '<div class="list-item">Nenhum dado para exibir</div>';
@@ -1784,7 +1759,6 @@
       alert('Rota excluída!');
     };
 
-    // Botão temporário para virar admin (remover depois)
     window.virarAdmin = function() {
       const uid = localStorage.getItem('usuario_id');
       database.ref('usuarios/' + uid).update({
@@ -1799,11 +1773,12 @@
     };
 
     // ==============================================
-    // CÓDIGO ORIGINAL DO SISTEMA (abreviado para não repetir)
+    // INICIALIZAÇÃO
     // ==============================================
-    // ... (seu código original de cálculos, renderRoutes, etc. vai aqui)
-    // Por questões de espaço, mantive apenas as correções necessárias
-    // mas você deve manter todo o seu código original de cálculos
+    (function init() {
+      console.log('🚀 Sistema iniciado');
+      // Aqui você pode adicionar suas funções de renderização originais
+    })();
   </script>
 
   <!-- Botão temporário para virar admin -->
