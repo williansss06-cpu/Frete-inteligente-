@@ -529,8 +529,8 @@
 
           <div class="actions">
             <button type="submit" class="btn btn-primary">Criar empresa e começar</button>
-            <!-- 🔥 BOTÃO QUE ABRE O MODAL DE LOGIN -->
-            <button type="button" class="btn btn-secondary" onclick="abrirModalLogin()">Já sou cliente</button>
+            <!-- 🔥 BOTÃO CORRIGIDO - Vai para a página de login -->
+            <a href="Login/index.html" class="btn btn-secondary" style="text-decoration:none; text-align:center;">Já sou cliente</a>
           </div>
 
           <div id="msg" class="msg"></div>
@@ -542,30 +542,6 @@
         </form>
       </div>
     </section>
-  </div>
-
-  <!-- MODAL DE LOGIN -->
-  <div id="modalLogin" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center;">
-    <div style="background:white; padding:30px; border-radius:20px; max-width:400px; width:90%;">
-      <h2 style="margin-top:0; color:#0f172a;">🔐 Login</h2>
-      
-      <div style="margin-bottom:15px;">
-        <label style="color:#334155;">E-mail</label>
-        <input type="email" id="loginEmail" placeholder="seu@email.com" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px;" />
-      </div>
-
-      <div style="margin-bottom:20px;">
-        <label style="color:#334155;">Senha</label>
-        <input type="password" id="loginSenha" placeholder="••••••" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px;" />
-      </div>
-
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-primary" onclick="fazerLogin()" style="flex:2;">Entrar</button>
-        <button class="btn btn-secondary" onclick="fecharModalLogin()" style="flex:1;">Cancelar</button>
-      </div>
-
-      <div id="loginMsg" style="margin-top:15px; font-size:13px; min-height:20px;"></div>
-    </div>
   </div>
 
   <!-- Firebase SDK -->
@@ -594,88 +570,6 @@
 
     const db = firebase.database();
     const auth = firebase.auth();
-
-    // ==============================================
-    // FUNÇÕES DO MODAL DE LOGIN
-    // ==============================================
-
-    window.abrirModalLogin = function() {
-      document.getElementById('modalLogin').style.display = 'flex';
-      document.getElementById('loginMsg').innerHTML = '';
-    };
-
-    window.fecharModalLogin = function() {
-      document.getElementById('modalLogin').style.display = 'none';
-    };
-
-    window.fazerLogin = async function() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const senha = document.getElementById('loginSenha').value.trim();
-      const loginMsg = document.getElementById('loginMsg');
-
-      if (!email || !senha) {
-        loginMsg.innerHTML = '<span style="color:#dc2626;">Preencha e-mail e senha</span>';
-        return;
-      }
-
-      try {
-        loginMsg.innerHTML = '⏳ Entrando...';
-        
-        const credential = await auth.signInWithEmailAndPassword(email, senha);
-        const user = credential.user;
-        
-        // Buscar dados do usuário no banco
-        const snapshot = await db.ref('usuarios/' + user.uid).once('value');
-        const userData = snapshot.val();
-
-        if (!userData) {
-          loginMsg.innerHTML = '<span style="color:#dc2626;">Usuário não encontrado</span>';
-          return;
-        }
-
-        // Verificar se a empresa está ativa
-        const empresaSnap = await db.ref('empresas/' + userData.empresa_id).once('value');
-        const empresaData = empresaSnap.val();
-
-        if (empresaData && empresaData.status === 'pendente') {
-          loginMsg.innerHTML = '<span style="color:#dc2626;">Sua empresa aguarda aprovação do administrador</span>';
-          return;
-        }
-
-        if (empresaData && empresaData.status === 'inativo') {
-          loginMsg.innerHTML = '<span style="color:#dc2626;">Empresa inativa. Contate o administrador.</span>';
-          return;
-        }
-
-        // Salvar dados na sessão
-        localStorage.setItem('usuario_id', user.uid);
-        localStorage.setItem('usuario_nome', userData.nome);
-        localStorage.setItem('usuario_email', userData.email);
-        localStorage.setItem('empresa_id', userData.empresa_id);
-        localStorage.setItem('perfil', userData.perfil);
-
-        loginMsg.innerHTML = '<span style="color:#059669;">✅ Login realizado! Redirecionando...</span>';
-
-        // Redirecionar para o sistema principal
-        setTimeout(() => {
-          window.location.href = 'sistema.html';
-        }, 1500);
-
-      } catch (error) {
-        console.error('Erro no login:', error);
-        
-        let msg = 'Erro ao fazer login.';
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-          msg = 'E-mail ou senha incorretos.';
-        } else if (error.code === 'auth/invalid-email') {
-          msg = 'E-mail inválido.';
-        } else if (error.code === 'auth/too-many-requests') {
-          msg = 'Muitas tentativas. Tente novamente mais tarde.';
-        }
-        
-        loginMsg.innerHTML = '<span style="color:#dc2626;">❌ ' + msg + '</span>';
-      }
-    };
 
     // ==============================================
     // FUNÇÕES DO CADASTRO
@@ -832,9 +726,9 @@
           <span style="font-size:12px;">Você será redirecionado em 3 segundos...</span>
         `;
 
-        // Redirecionar para a mesma página (limpa o formulário)
+        // Redirecionar para a página de login
         setTimeout(() => {
-          window.location.href = 'index.html';
+          window.location.href = 'Login/index.html';
         }, 3000);
 
       } catch (error) {
@@ -857,10 +751,9 @@
       }
     });
 
-    // Verificar se já está logado
+    // Se já estiver logado, vai direto para o sistema
     auth.onAuthStateChanged((user) => {
       if (user) {
-        // Se já estiver logado, vai direto para o sistema
         window.location.href = 'sistema.html';
       }
     });
