@@ -817,7 +817,12 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
       <script>
-        const BASE = "/Frete-inteligente-"; // 👈 só UMA vez
+       const BASE = "/Frete-inteligente-"; // 👉 só UMA vez
+
+// 🔒 PROTEÇÃO (COLE AQUI 👇)
+if (!localStorage.getItem("usuario_id")) {
+  window.location.replace(BASE + "/Login/index.html");
+}
         
 // 🔥 CONFIGURAÇÃO DO FIREBASE
 const firebaseConfig = {
@@ -837,7 +842,7 @@ window.sair = function() {
 
   localStorage.clear();
 
-  window.location.href = BASE + "/Login/index.html";
+  window.location.replace(BASE + "/Login/index.html");
 };
     
     // Inicializar Firebase
