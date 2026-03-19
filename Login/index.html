@@ -198,6 +198,13 @@
         }
       }
     }
+
+    // Se já estiver logado, vai direto para o sistema
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = '../sistema.html';
+      }
+    });
   </script>
 </body>
 </html>
