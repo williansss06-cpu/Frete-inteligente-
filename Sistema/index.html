@@ -833,14 +833,12 @@ const firebaseConfig = {
 
 // 🚪 LOGOUT
 window.sair = function() {
-  firebase.auth().signOut().then(() => {
-    localStorage.clear();
-    window.location.href = BASE + "/Login/index.html";
-  }).catch((error) => {
-    console.error("Erro ao sair:", error);
-    alert("Erro ao sair do sistema");
-  });
-}
+  console.log("🚪 Logout funcionando");
+
+  localStorage.clear();
+
+  window.location.href = BASE + "/Login/index.html";
+};
     
     // Inicializar Firebase
     if (!firebase.apps.length) {
