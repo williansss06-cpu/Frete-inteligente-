@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frete Inteligente - Painel Administrativo</title>
+  <title>Frete Inteligente - Administração</title>
   <style>
     * {
       margin: 0;
@@ -21,19 +21,17 @@
 
     /* Sidebar */
     .sidebar {
-      width: 260px;
+      width: 240px;
       background: #0f172a;
       color: white;
       display: flex;
       flex-direction: column;
       padding: 20px 0;
-      height: 100vh;
-      overflow-y: auto;
     }
 
     .logo {
       padding: 0 20px 20px 20px;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: bold;
       border-bottom: 1px solid #334155;
       margin-bottom: 20px;
@@ -44,14 +42,9 @@
     }
 
     .menu-item {
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 10px 20px;
       color: #cbd5e1;
       cursor: pointer;
-      transition: all 0.3s;
-      border-left: 3px solid transparent;
     }
 
     .menu-item:hover {
@@ -62,15 +55,10 @@
     .menu-item.ativo {
       background: #1e293b;
       color: white;
-      border-left-color: #34d399;
+      border-left: 3px solid #34d399;
     }
 
-    .menu-item i {
-      width: 20px;
-      font-size: 18px;
-    }
-
-    /* Main Content */
+    /* Main */
     .main {
       flex: 1;
       display: flex;
@@ -80,152 +68,136 @@
 
     .header {
       background: white;
-      padding: 15px 30px;
+      padding: 15px 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #e2e8f0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .header h1 {
-      font-size: 24px;
+      font-size: 22px;
       color: #0f172a;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      background: #34d399;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
+      gap: 15px;
     }
 
     .btn-sair {
-      padding: 8px 16px;
+      padding: 6px 12px;
       background: #ef4444;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
-      transition: background 0.3s;
-    }
-
-    .btn-sair:hover {
-      background: #dc2626;
     }
 
     .content {
       flex: 1;
-      padding: 30px;
+      padding: 25px;
       overflow-y: auto;
-      background: #f8fafc;
     }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 10px;
-    }
-
-    .tab {
-      padding: 10px 20px;
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .tab:hover {
-      background: #f1f5f9;
-    }
-
-    .tab.ativo {
-      background: #0f172a;
-      color: white;
-      border-color: #0f172a;
-    }
-
-    /* Search Bar */
-    .search-bar {
+    /* Stats Cards */
+    .stats {
       display: flex;
       gap: 15px;
       margin-bottom: 25px;
       flex-wrap: wrap;
     }
 
-    .search-input {
-      flex: 1;
-      min-width: 250px;
-      padding: 12px 15px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
+    .stat-card {
       background: white;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: #34d399;
-    }
-
-    .filter-select {
-      padding: 12px 15px;
-      border: 1px solid #e2e8f0;
+      padding: 15px 20px;
       border-radius: 8px;
-      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       min-width: 150px;
     }
 
-    /* Button Nova Empresa */
-    .btn-primary {
-      padding: 12px 24px;
+    .stat-card .label {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .stat-card .value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+    }
+
+    .tab {
+      color: #64748b;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .tab.ativo {
+      color: #0f172a;
+      font-weight: 600;
+      border-bottom: 2px solid #34d399;
+      padding-bottom: 10px;
+      margin-bottom: -12px;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      background: white;
+    }
+
+    /* BOTÃO NOVA EMPRESA CORRIGIDO */
+    .btn-nova-empresa {
+      padding: 8px 16px;
       background: #34d399;
       color: #0f172a;
       border: none;
-      border-radius: 8px;
+      border-radius: 4px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.3s;
-      font-size: 14px;
+      gap: 5px;
     }
 
-    .btn-primary:hover {
+    .btn-nova-empresa:hover {
       background: #10b981;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
     }
 
     /* Table */
     .table-container {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       overflow-x: auto;
     }
 
@@ -236,30 +208,24 @@
 
     th {
       background: #f8fafc;
-      padding: 15px;
+      padding: 12px;
       text-align: left;
-      font-weight: 600;
-      color: #475569;
-      font-size: 14px;
-      border-bottom: 2px solid #e2e8f0;
+      font-size: 13px;
+      color: #64748b;
+      border-bottom: 1px solid #e2e8f0;
     }
 
     td {
-      padding: 15px;
+      padding: 12px;
       border-bottom: 1px solid #e2e8f0;
-      color: #334155;
-    }
-
-    tr:hover {
-      background: #f8fafc;
+      font-size: 14px;
     }
 
     .status {
       padding: 4px 8px;
-      border-radius: 20px;
+      border-radius: 12px;
       font-size: 12px;
       font-weight: 600;
-      display: inline-block;
     }
 
     .status.ativo {
@@ -272,34 +238,22 @@
       color: #92400e;
     }
 
-    .status.inativo {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .btn-acao {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    /* Debug Button */
+    .debug-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0f172a;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
       font-size: 12px;
-      margin: 0 4px;
-      transition: all 0.3s;
+      cursor: pointer;
+      opacity: 0.5;
     }
 
-    .btn-acao.editar {
-      background: #3b82f6;
-      color: white;
-    }
-
-    .btn-acao.aprovar {
-      background: #10b981;
-      color: white;
-    }
-
-    .btn-acao.suspender {
-      background: #f59e0b;
-      color: white;
+    .debug-btn:hover {
+      opacity: 1;
     }
 
     /* Modal */
@@ -322,222 +276,145 @@
 
     .modal-content {
       background: white;
-      border-radius: 16px;
+      border-radius: 8px;
       width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 30px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 500px;
+      padding: 25px;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 25px;
-    }
-
-    .modal-header h2 {
-      color: #0f172a;
+      margin-bottom: 20px;
     }
 
     .close {
-      font-size: 24px;
+      font-size: 20px;
       cursor: pointer;
-      color: #94a3b8;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
+      margin-bottom: 5px;
+      font-size: 13px;
       color: #475569;
     }
 
     .form-group input,
     .form-group select {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: #34d399;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
     }
 
     .btn-submit {
       width: 100%;
-      padding: 14px;
+      padding: 10px;
       background: #34d399;
-      color: #0f172a;
       border: none;
-      border-radius: 8px;
+      border-radius: 4px;
       font-weight: bold;
-      font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .btn-submit:hover {
-      background: #10b981;
-    }
-
-    /* Tornar-me Admin (debug) */
-    .debug-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #0f172a;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 40px;
-      font-size: 14px;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: all 0.3s;
-      z-index: 100;
-    }
-
-    .debug-btn:hover {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-
-    /* Loading */
-    .loading {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.8);
-      z-index: 2000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .loading.active {
-      display: flex;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #34d399;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="logo">
-      Frete <span>Inteligente</span>
-    </div>
-    
-    <div class="menu-item" onclick="window.location.href='/Frete-inteligente-/Simulador/index.html'">
-      <i>📊</i> Simulador
-    </div>
-    <div class="menu-item" onclick="window.location.href='/Frete-inteligente-/BaseRotas/index.html'">
-      <i>🗺️</i> Base de Rotas
-    </div>
-    <div class="menu-item" onclick="window.location.href='/Frete-inteligente-/Cotacao/index.html'">
-      <i>💰</i> Cotação do Dia
-    </div>
-    <div class="menu-item" onclick="window.location.href='/Frete-inteligente-/Dashboard/index.html'">
-      <i>📈</i> Dashboard
-    </div>
-    <div class="menu-item" onclick="window.location.href='/Frete-inteligente-/Empresa/index.html'">
-      <i>🏢</i> Minha Empresa
-    </div>
-    <div class="menu-item ativo" onclick="window.location.href='/Frete-inteligente-/Admin/index.html'">
-      <i>⚙️</i> Admin
-    </div>
-    <div class="menu-item" onclick="window.location.href='/Frete-inteligente-/Parametros/index.html'">
-      <i>🔧</i> Parâmetros
-    </div>
+    <div class="logo">Frete <span>Inteligente</span></div>
+    <div class="menu-item">Simulador</div>
+    <div class="menu-item">Base de Rotas</div>
+    <div class="menu-item">Cotação do Dia</div>
+    <div class="menu-item">Dashboard</div>
+    <div class="menu-item">Minha Empresa</div>
+    <div class="menu-item ativo">Admin</div>
+    <div class="menu-item">Parâmetros</div>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <div class="main">
-    <!-- Header -->
     <div class="header">
       <h1>Administração do Sistema</h1>
-      <div class="header-right">
-        <div class="user-info">
-          <div class="user-avatar">A</div>
-          <span>Admin Sistema</span>
-        </div>
+      <div class="user-info">
+        <span>Admin</span>
         <button class="btn-sair" onclick="sair()">Sair</button>
       </div>
     </div>
 
-    <!-- Content -->
     <div class="content">
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab ativo" onclick="mudarAba('empresas')">Empresas</button>
-        <button class="tab" onclick="mudarAba('usuarios')">Usuários</button>
-        <button class="tab" onclick="mudarAba('planos')">Planos</button>
-        <button class="tab" onclick="mudarAba('logs')">Logs</button>
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-card"><span class="label">Empresas</span><div class="value" id="totalEmpresas">12</div></div>
+        <div class="stat-card"><span class="label">Ativas</span><div class="value" id="ativasEmpresas">8</div></div>
+        <div class="stat-card"><span class="label">Pendentes</span><div class="value" id="pendentesEmpresas">3</div></div>
+        <div class="stat-card"><span class="label">Usuários</span><div class="value" id="totalUsuarios">47</div></div>
       </div>
 
-      <!-- Search Bar com Botão Nova Empresa -->
+      <!-- Tabs -->
+      <div class="tabs">
+        <span class="tab ativo" onclick="mudarAba('empresas')">Empresas</span>
+        <span class="tab" onclick="mudarAba('usuarios')">Usuários</span>
+        <span class="tab" onclick="mudarAba('planos')">Planos</span>
+        <span class="tab" onclick="mudarAba('logs')">Logs</span>
+      </div>
+
+      <!-- Search Bar com BOTÃO NOVA EMPRESA CORRIGIDO -->
       <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Buscar empresa..." id="searchInput" onkeyup="filtrarEmpresas()">
-        <select class="filter-select" id="statusFilter" onchange="filtrarEmpresas()">
-          <option value="todos">Todos os status</option>
-          <option value="ativo">Ativo</option>
-          <option value="pendente">Pendente</option>
-          <option value="inativo">Inativo</option>
+        <input type="text" class="search-input" placeholder="Buscar empresa..." id="searchInput">
+        <select class="filter-select" id="statusFilter">
+          <option>Todos os status</option>
+          <option>Ativo</option>
+          <option>Pendente</option>
+          <option>Inativo</option>
+        </select>
+        <select class="filter-select" id="planoFilter">
+          <option>Todos os planos</option>
+          <option>Starter</option>
+          <option>Pro</option>
+          <option>Enterprise</option>
         </select>
         
         <!-- BOTÃO NOVA EMPRESA FUNCIONAL -->
-        <button class="btn-primary" onclick="abrirModalNovaEmpresa()">
-          <span>➕</span> Nova Empresa
+        <button class="btn-nova-empresa" onclick="abrirModalNovaEmpresa()">
+          <span>+</span> Nova Empresa
         </button>
       </div>
 
-      <!-- Tabela de Empresas -->
+      <!-- Tabela -->
       <div class="table-container">
-        <table id="tabelaEmpresas">
+        <table>
           <thead>
             <tr>
-              <th>EMPRESA</th>
-              <th>CNPJ</th>
-              <th>CONTATO</th>
-              <th>USUÁRIOS</th>
-              <th>PLANO</th>
-              <th>STATUS</th>
-              <th>CADASTRO</th>
-              <th>AÇÕES</th>
+              <th>EMPRESA</th><th>CNPJ</th><th>CONTATO</th><th>USUÁRIOS</th><th>PLANO</th><th>STATUS</th><th>CADASTRO</th><th>AÇÕES</th>
             </tr>
           </thead>
-          <tbody id="empresasTableBody">
-            <!-- Dados serão carregados via JavaScript -->
+          <tbody id="tabelaEmpresas">
+            <tr>
+              <td><strong>Transportadora Modelo LTDA</strong></td>
+              <td>12.345.678/0001-90</td>
+              <td>joao@modelo.com</td>
+              <td>5</td>
+              <td>Pro</td>
+              <td><span class="status ativo">Ativo</span></td>
+              <td>15/03/2026</td>
+              <td>✔️</td>
+            </tr>
+            <tr>
+              <td><strong>Transportadora Express Sul</strong></td>
+              <td>98.765.432/0001-12</td>
+              <td>contato@express.com</td>
+              <td>3</td>
+              <td>Starter</td>
+              <td><span class="status pendente">Pendente</span></td>
+              <td>18/03/2026</td>
+              <td>✔️</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -548,335 +425,115 @@
   <div class="modal" id="modalNovaEmpresa">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>➕ Cadastrar Nova Empresa</h2>
-        <span class="close" onclick="fecharModalNovaEmpresa()">&times;</span>
+        <h3>Nova Empresa</h3>
+        <span class="close" onclick="fecharModal()">&times;</span>
       </div>
-      
-      <form id="formNovaEmpresa" onsubmit="event.preventDefault(); salvarNovaEmpresa();">
+      <form onsubmit="event.preventDefault(); salvarEmpresa()">
         <div class="form-group">
-          <label>Nome da Empresa *</label>
-          <input type="text" id="empresaNome" required placeholder="Digite o nome fantasia">
+          <label>Nome da Empresa</label>
+          <input type="text" id="empresaNome" required>
         </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label>CNPJ *</label>
-            <input type="text" id="empresaCnpj" required placeholder="00.000.000/0001-00" oninput="mascaraCNPJ(this)">
-          </div>
-          <div class="form-group">
-            <label>Plano *</label>
-            <select id="empresaPlano" required>
-              <option value="starter">Starter (R$ 0)</option>
-              <option value="pro">Pro (R$ 299)</option>
-              <option value="enterprise">Enterprise (Sob consulta)</option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label>Email de Contato *</label>
-            <input type="email" id="empresaEmail" required placeholder="contato@empresa.com">
-          </div>
-          <div class="form-group">
-            <label>Telefone</label>
-            <input type="text" id="empresaTelefone" placeholder="(11) 99999-9999">
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label>Status *</label>
-            <select id="empresaStatus" required>
-              <option value="ativo">Ativo (acesso imediato)</option>
-              <option value="pendente" selected>Pendente (aguardando aprovação)</option>
-              <option value="inativo">Inativo (bloqueado)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Limite de Usuários</label>
-            <input type="number" id="empresaLimite" value="3" min="1" max="999">
-          </div>
-        </div>
-        
         <div class="form-group">
-          <label>Observações</label>
-          <textarea id="empresaObs" rows="3" placeholder="Informações adicionais..."></textarea>
+          <label>CNPJ</label>
+          <input type="text" id="empresaCnpj" required>
         </div>
-        
-        <button type="submit" class="btn-submit">✅ Cadastrar Empresa</button>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="empresaEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Plano</label>
+          <select id="empresaPlano">
+            <option value="starter">Starter</option>
+            <option value="pro">Pro</option>
+            <option value="enterprise">Enterprise</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="empresaStatus">
+            <option value="ativo">Ativo</option>
+            <option value="pendente" selected>Pendente</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">Salvar</button>
       </form>
     </div>
   </div>
 
-  <!-- Loading -->
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-  </div>
-
-  <!-- Debug: Tornar-me Admin -->
-  <div class="debug-btn" onclick="tornarAdmin()">
-    ⚡ TORNAR-ME ADMIN (CLIQUE AQUI)
-  </div>
+  <!-- Debug Button -->
+  <div class="debug-btn" onclick="tornarAdmin()">TORNAR-ME ADMIN (CLIQUE AQUI)</div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    const BASE = "/Frete-inteligente-";
-    
-    // Configuração do Firebase
-    const firebaseConfig = {
+    // Config Firebase
+    firebase.initializeApp({
       apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
       authDomain: "rota-22c3b.firebaseapp.com",
       databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com/",
-      projectId: "rota-22c3b",
-      storageBucket: "rota-22c3b.appspot.com"
-    };
+      projectId: "rota-22c3b"
+    });
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.database();
 
-    // Verifica se está logado como admin
-    const usuarioId = localStorage.getItem('usuario_id');
-    const perfil = localStorage.getItem('perfil');
-    
-    if (!usuarioId || perfil !== 'admin_plataforma') {
-      window.location.href = BASE + '/Login/index.html';
-    }
-
-    // Carregar empresas ao iniciar
-    window.onload = function() {
-      carregarEmpresas();
-    };
-
-    // Função para carregar empresas do Firebase
-    function carregarEmpresas() {
-      showLoading();
-      
-      db.ref('empresas').once('value', snapshot => {
-        const empresas = snapshot.val();
-        const tbody = document.getElementById('empresasTableBody');
-        tbody.innerHTML = '';
-        
-        if (!empresas) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhuma empresa cadastrada</td></tr>';
-          hideLoading();
-          return;
-        }
-        
-        // Converter para array e ordenar
-        const empresasArray = Object.keys(empresas).map(key => ({
-          id: key,
-          ...empresas[key]
-        })).sort((a, b) => b.data_cadastro - a.data_cadastro);
-        
-        empresasArray.forEach(empresa => {
-          const dataCadastro = new Date(empresa.data_cadastro || Date.now()).toLocaleDateString('pt-BR');
-          const statusClass = empresa.status === 'ativo' ? 'ativo' : (empresa.status === 'pendente' ? 'pendente' : 'inativo');
-          
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td><strong>${empresa.nome_fantasia || 'Sem nome'}</strong></td>
-            <td>${formatarCNPJ(empresa.cnpj) || '---'}</td>
-            <td>${empresa.email || '---'}</td>
-            <td>${empresa.usuarios_ativos || 0}</td>
-            <td>${empresa.plano || 'starter'}</td>
-            <td><span class="status ${statusClass}">${empresa.status || 'pendente'}</span></td>
-            <td>${dataCadastro}</td>
-            <td>
-              <button class="btn-acao editar" onclick="editarEmpresa('${empresa.id}')">✏️ Editar</button>
-              ${empresa.status === 'pendente' ? `<button class="btn-acao aprovar" onclick="aprovarEmpresa('${empresa.id}')">✅ Aprovar</button>` : ''}
-              ${empresa.status === 'ativo' ? `<button class="btn-acao suspender" onclick="suspenderEmpresa('${empresa.id}')">⚠️ Suspender</button>` : ''}
-            </td>
-          `;
-          tbody.appendChild(row);
-        });
-        
-        hideLoading();
-      }).catch(error => {
-        console.error('Erro ao carregar empresas:', error);
-        hideLoading();
-      });
-    }
-
-    // Função para abrir modal de nova empresa (BOTÃO FUNCIONAL!)
+    // Modal functions
     function abrirModalNovaEmpresa() {
       document.getElementById('modalNovaEmpresa').classList.add('active');
-      document.getElementById('formNovaEmpresa').reset();
     }
 
-    function fecharModalNovaEmpresa() {
+    function fecharModal() {
       document.getElementById('modalNovaEmpresa').classList.remove('active');
     }
 
-    // Função para salvar nova empresa
-    async function salvarNovaEmpresa() {
-      const nome = document.getElementById('empresaNome').value.trim();
-      const cnpj = document.getElementById('empresaCnpj').value.replace(/[^\d]/g, '');
-      const email = document.getElementById('empresaEmail').value.trim();
-      const telefone = document.getElementById('empresaTelefone').value;
+    // Salvar empresa no Firebase
+    function salvarEmpresa() {
+      const nome = document.getElementById('empresaNome').value;
+      const cnpj = document.getElementById('empresaCnpj').value.replace(/\D/g, '');
+      const email = document.getElementById('empresaEmail').value;
       const plano = document.getElementById('empresaPlano').value;
       const status = document.getElementById('empresaStatus').value;
-      const limite = parseInt(document.getElementById('empresaLimite').value);
-      const obs = document.getElementById('empresaObs').value;
 
-      if (!nome || !cnpj || !email) {
-        alert('Preencha os campos obrigatórios!');
-        return;
-      }
-
-      showLoading();
-
-      try {
-        // Criar empresa no Firebase
-        const empresaRef = db.ref('empresas').push();
-        const empresaId = empresaRef.key;
-
-        await empresaRef.set({
-          nome_fantasia: nome,
-          razao_social: nome,
-          cnpj: cnpj,
-          email: email,
-          telefone: telefone,
-          plano: plano,
-          status: status,
-          usuarios_ativos: 0,
-          usuarios_max: limite,
-          observacoes: obs,
-          data_cadastro: Date.now(),
-          criado_por: usuarioId
-        });
-
-        fecharModalNovaEmpresa();
-        carregarEmpresas(); // Recarrega a lista
-        
-        alert('✅ Empresa cadastrada com sucesso!');
-      } catch (error) {
-        console.error('Erro ao cadastrar:', error);
-        alert('Erro: ' + error.message);
-      } finally {
-        hideLoading();
-      }
-    }
-
-    // Função para aprovar empresa
-    async function aprovarEmpresa(empresaId) {
-      if (!confirm('Deseja aprovar esta empresa?')) return;
-      
-      showLoading();
-      try {
-        await db.ref('empresas/' + empresaId).update({
-          status: 'ativo'
-        });
-        carregarEmpresas();
-        alert('✅ Empresa aprovada!');
-      } catch (error) {
-        alert('Erro: ' + error.message);
-      } finally {
-        hideLoading();
-      }
-    }
-
-    // Função para suspender empresa
-    async function suspenderEmpresa(empresaId) {
-      if (!confirm('Deseja suspender esta empresa?')) return;
-      
-      showLoading();
-      try {
-        await db.ref('empresas/' + empresaId).update({
-          status: 'inativo'
-        });
-        carregarEmpresas();
-        alert('⚠️ Empresa suspensa!');
-      } catch (error) {
-        alert('Erro: ' + error.message);
-      } finally {
-        hideLoading();
-      }
-    }
-
-    // Função para editar empresa
-    function editarEmpresa(empresaId) {
-      alert('Função de edição será implementada em breve! ID: ' + empresaId);
-    }
-
-    // Função para filtrar empresas
-    function filtrarEmpresas() {
-      const searchText = document.getElementById('searchInput').value.toLowerCase();
-      const statusFilter = document.getElementById('statusFilter').value;
-      const rows = document.querySelectorAll('#empresasTableBody tr');
-      
-      rows.forEach(row => {
-        const empresaText = row.cells[0]?.textContent.toLowerCase() || '';
-        const status = row.cells[5]?.textContent.toLowerCase() || '';
-        
-        const matchesSearch = empresaText.includes(searchText);
-        const matchesStatus = statusFilter === 'todos' || status.includes(statusFilter);
-        
-        row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+      db.ref('empresas').push({
+        nome_fantasia: nome,
+        cnpj: cnpj,
+        email: email,
+        plano: plano,
+        status: status,
+        usuarios_ativos: 0,
+        data_cadastro: Date.now()
+      }).then(() => {
+        alert('✅ Empresa cadastrada!');
+        fecharModal();
+        location.reload(); // Recarrega para mostrar na tabela
+      }).catch(err => {
+        alert('Erro: ' + err.message);
       });
     }
 
-    // Função para mudar de aba
-    function mudarAba(aba) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('ativo'));
-      event.target.classList.add('ativo');
-      
-      if (aba === 'empresas') {
-        carregarEmpresas();
-      } else {
-        alert(`Aba ${aba} em desenvolvimento`);
-      }
-    }
-
-    // Função de logout
+    // Sair
     function sair() {
-      auth.signOut().then(() => {
-        localStorage.clear();
-        window.location.href = BASE + '/Login/index.html';
-      });
+      localStorage.clear();
+      window.location.href = '/Frete-inteligente-/Login/index.html';
     }
 
-    // Função debug: tornar admin
+    // Tornar admin (debug)
     function tornarAdmin() {
       localStorage.setItem('perfil', 'admin_plataforma');
-      alert('✅ Modo admin ativado! Recarregue a página.');
+      alert('✅ Modo admin ativado');
     }
 
-    // Utilitários
-    function showLoading() {
-      document.getElementById('loading').classList.add('active');
+    // Mudar aba
+    function mudarAba(aba) {
+      alert('Aba ' + aba + ' em desenvolvimento');
     }
 
-    function hideLoading() {
-      document.getElementById('loading').classList.remove('active');
-    }
-
-    function mascaraCNPJ(input) {
-      let v = input.value.replace(/\D/g, '');
-      v = v.replace(/^(\d{2})(\d)/, '$1.$2');
-      v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-      v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
-      v = v.replace(/(\d{4})(\d)/, '$1-$2');
-      input.value = v;
-    }
-
-    function formatarCNPJ(cnpj) {
-      if (!cnpj) return '';
-      cnpj = cnpj.replace(/\D/g, '');
-      return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
-    }
-
-    // Fechar modal ao clicar fora
+    // Fechar modal clicando fora
     window.onclick = function(event) {
       const modal = document.getElementById('modalNovaEmpresa');
-      if (event.target === modal) {
-        fecharModalNovaEmpresa();
-      }
+      if (event.target === modal) fecharModal();
     };
   </script>
 </body>
