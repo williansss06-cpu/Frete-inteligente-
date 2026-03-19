@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frete Inteligente - Planos</title>
+  <title>Frete Inteligente - Minha Empresa</title>
   <style>
     * {
       margin: 0;
@@ -13,402 +13,674 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      background: #f1f5f9;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 1200px;
-      width: 100%;
-    }
-
-    .header {
-      text-align: center;
-      color: white;
-      margin-bottom: 50px;
-    }
-
-    .header h1 {
-      font-size: 2.5em;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .header p {
-      font-size: 1.2em;
-      opacity: 0.95;
-    }
-
-    .planos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-bottom: 40px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      transition: transform 0.3s;
-      position: relative;
+      height: 100vh;
       overflow: hidden;
     }
 
-    .card:hover {
-      transform: translateY(-10px);
-    }
-
-    .card.popular::before {
-      content: "Mais Popular";
-      position: absolute;
-      top: 20px;
-      right: -35px;
-      background: #ff6b6b;
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #0f172a;
       color: white;
-      padding: 8px 40px;
-      transform: rotate(45deg);
-      font-size: 14px;
-      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
     }
 
-    .card h2 {
-      color: #333;
-      margin-bottom: 15px;
-      font-size: 28px;
-    }
-
-    .preco {
-      font-size: 36px;
+    .logo {
+      padding: 0 20px 20px 20px;
+      font-size: 20px;
       font-weight: bold;
-      color: #667eea;
+      border-bottom: 1px solid #334155;
       margin-bottom: 20px;
     }
 
-    .preco small {
-      font-size: 16px;
-      color: #999;
-      font-weight: normal;
+    .logo span {
+      color: #34d399;
     }
 
-    .descricao {
-      color: #666;
-      margin-bottom: 25px;
-      line-height: 1.6;
+    .menu-item {
+      padding: 10px 20px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.3s;
     }
 
-    .recursos {
-      list-style: none;
-      margin-bottom: 30px;
+    .menu-item:hover {
+      background: #1e293b;
+      color: white;
     }
 
-    .recursos li {
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      color: #555;
+    .menu-item.ativo {
+      background: #1e293b;
+      color: white;
+      border-left: 3px solid #34d399;
     }
 
-    .recursos li:last-child {
-      border-bottom: none;
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
-    .recursos li::before {
-      content: "✓";
-      color: #4CAF50;
-      font-weight: bold;
-      margin-right: 10px;
+    .header {
+      background: white;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
     }
 
-    .btn-plano {
-      width: 100%;
-      padding: 15px;
-      background: #667eea;
+    .header h1 {
+      font-size: 22px;
+      color: #0f172a;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn-sair {
+      padding: 6px 12px;
+      background: #ef4444;
       color: white;
       border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
+      border-radius: 4px;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
-    .btn-plano:hover {
-      background: #5a67d8;
-    }
-
-    .info-empresa {
-      background: white;
-      border-radius: 20px;
+    .content {
+      flex: 1;
       padding: 25px;
-      margin-top: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      overflow-y: auto;
     }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin: 20px 0;
-    }
-
-    .info-item {
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 10px;
-    }
-
-    .info-item label {
-      display: block;
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .info-item .valor {
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .status-pendente {
-      color: #f39c12;
-      font-weight: bold;
-      background: #fff3cd;
-      padding: 5px 10px;
-      border-radius: 5px;
-      display: inline-block;
-    }
-
-    .acoes {
+    /* Tabs */
+    .tabs {
       display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+    }
+
+    .tab {
+      color: #64748b;
+      cursor: pointer;
+      font-weight: 500;
+      padding: 5px 0;
+    }
+
+    .tab.ativo {
+      color: #0f172a;
+      font-weight: 600;
+      border-bottom: 2px solid #34d399;
+      margin-bottom: -12px;
+    }
+
+    /* Cards e formulários */
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #34d399;
     }
 
     .btn-primary {
-      flex: 2;
-      padding: 15px 30px;
-      background: #4CAF50;
-      color: white;
+      padding: 12px 24px;
+      background: #34d399;
+      color: #0f172a;
       border: none;
-      border-radius: 10px;
-      font-size: 16px;
+      border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
       transition: background 0.3s;
-      min-width: 200px;
     }
 
     .btn-primary:hover {
-      background: #45a049;
+      background: #10b981;
     }
 
-    .btn-login {
-      flex: 1;
-      padding: 15px 30px;
-      background: #667eea;
-      color: white;
+    .btn-secondary {
+      padding: 8px 16px;
+      background: #e2e8f0;
+      color: #334155;
       border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
+      border-radius: 4px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.3s;
-      min-width: 150px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
+      margin-right: 8px;
+    }
+
+    .btn-success {
+      background: #34d399;
+      color: #0f172a;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    /* Tabela de usuários */
+    .table-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 12px;
+      text-align: left;
+      font-size: 13px;
+      color: #64748b;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-badge.ativo {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.pendente {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .acoes button {
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 4px;
+      font-size: 12px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
       justify-content: center;
+      align-items: center;
     }
 
-    .btn-login:hover {
-      background: #5a67d8;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    .modal.active {
+      display: flex;
     }
 
-    .erro-cnpj {
-      background: #fee;
-      color: #c33;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-      border-left: 4px solid #c33;
-      font-weight: bold;
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 450px;
+      padding: 25px;
     }
 
-    @media (max-width: 768px) {
-      .acoes {
-        flex-direction: column;
-      }
-      
-      .btn-primary, .btn-login {
-        width: 100%;
-      }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* Loading */
+    .loading {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loading.active {
+      display: flex;
+    }
+
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #34d399;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="sidebar">
+    <div class="logo">Frete <span>Inteligente</span></div>
+    <div class="menu-item">Simulador</div>
+    <div class="menu-item">Base de Rotas</div>
+    <div class="menu-item">Cotação do Dia</div>
+    <div class="menu-item">Dashboard</div>
+    <div class="menu-item ativo">Minha Empresa</div>
+    <div class="menu-item">Parâmetros</div>
+  </div>
+
+  <div class="main">
     <div class="header">
-      <h1>🚛 Frete Inteligente</h1>
-      <p>Escolha o plano ideal para sua operação logística</p>
-    </div>
-
-    <div class="planos">
-      <!-- Plano Starter -->
-      <div class="card">
-        <h2>Starter</h2>
-        <div class="preco">R$ 0 <small>/mês</small></div>
-        <p class="descricao">Perfeito para começar sua operação</p>
-        <ul class="recursos">
-          <li>Até 3 usuários</li>
-          <li>100 simulações/mês</li>
-          <li>Relatórios básicos</li>
-          <li>Suporte por email</li>
-        </ul>
-        <button class="btn-plano" onclick="selecionarPlano('starter')">Selecionar Starter</button>
-      </div>
-
-      <!-- Plano Pro -->
-      <div class="card popular">
-        <h2>Pro</h2>
-        <div class="preco">R$ 299 <small>/mês</small></div>
-        <p class="descricao">Para operações em crescimento</p>
-        <ul class="recursos">
-          <li>Até 15 usuários</li>
-          <li>Simulações ilimitadas</li>
-          <li>Dashboards avançados</li>
-          <li>API de integração</li>
-          <li>Suporte prioritário</li>
-        </ul>
-        <button class="btn-plano" onclick="selecionarPlano('pro')">Selecionar Pro</button>
-      </div>
-
-      <!-- Plano Enterprise -->
-      <div class="card">
-        <h2>Enterprise</h2>
-        <div class="preco">Sob consulta</div>
-        <p class="descricao">Para grandes operações</p>
-        <ul class="recursos">
-          <li>Usuários ilimitados</li>
-          <li>Governança avançada</li>
-          <li>Gerente de conta dedicado</li>
-          <li>SLA garantido</li>
-          <li>Customizações</li>
-        </ul>
-        <button class="btn-plano" onclick="selecionarPlano('enterprise')">Falar com consultor</button>
+      <h1>Minha Empresa</h1>
+      <div class="user-info">
+        <span id="userName">Carregando...</span>
+        <button class="btn-sair" onclick="sair()">Sair</button>
       </div>
     </div>
 
-    <!-- Informações da Empresa (aparece quando já existe cadastro) -->
-    <div class="info-empresa" id="infoEmpresa" style="display: none;">
-      <h3>📋 Status da sua empresa</h3>
-      
-      <!-- Mensagem de erro CNPJ duplicado -->
-      <div class="erro-cnpj" id="erroCNPJ">
-        ⚠️ Já existe uma empresa cadastrada com este CNPJ.
+    <div class="content">
+      <!-- Tabs -->
+      <div class="tabs">
+        <span class="tab ativo" onclick="mudarAba('dados')">Dados da Empresa</span>
+        <span class="tab" onclick="mudarAba('usuarios')">Usuários</span>
       </div>
 
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Plano selecionado</label>
-          <div class="valor" id="planoSelecionado">Starter</div>
-        </div>
-        <div class="info-item">
-          <label>Perfil inicial</label>
-          <div class="valor">Administrador da empresa</div>
-        </div>
-        <div class="info-item">
-          <label>Status inicial</label>
-          <div class="valor">
-            <span class="status-pendente">⏳ Pendente (aguardando aprovação)</span>
+      <!-- Aba Dados da Empresa -->
+      <div id="abaDados" class="card">
+        <h2 style="margin-bottom: 20px;">Gerencie os dados da sua empresa</h2>
+        <form id="formEmpresa" onsubmit="event.preventDefault(); salvarDadosEmpresa()">
+          <div class="form-group">
+            <label>Razão Social</label>
+            <input type="text" id="razaoSocial" required>
           </div>
+          <div class="form-group">
+            <label>CNPJ</label>
+            <input type="text" id="cnpj" required readonly style="background:#f1f5f9;">
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="text" id="telefone" placeholder="(11) 3456-7890">
+          </div>
+          <div class="form-group">
+            <label>Endereço</label>
+            <input type="text" id="endereco" placeholder="Estrada venha guarulhos São Miguel">
+          </div>
+          <button type="submit" class="btn-primary">Salvar Alterações</button>
+        </form>
+      </div>
+
+      <!-- Aba Usuários (inicialmente oculta) -->
+      <div id="abaUsuarios" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h2>Usuários da Empresa</h2>
+          <button class="btn-primary" onclick="abrirModalNovoUsuario()">+ Novo Usuário</button>
         </div>
-      </div>
-
-      <p style="color: #666; margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-        <strong>⏰ Ao concluir o cadastro, a empresa será criada no sistema com status "pendente".</strong><br>
-        O administrador do sistema irá aprovar seu acesso em até 24h. Você receberá um email quando for aprovado.
-      </p>
-
-      <div class="acoes">
-        <button class="btn-primary" onclick="criarEmpresa()">
-          🏢 Criar empresa e começar
-        </button>
-        
-        <!-- BOTÃO "JÁ TENHO CONTA" CORRIGIDO -->
-        <button 
-          type="button"
-          class="btn-login"
-          onclick="window.location.href='/Frete-inteligente-/Login/index.html'"
-        >
-          🔑 Já tenho conta
-        </button>
-      </div>
-    </div>
-
-    <!-- Loading (opcional) -->
-    <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
-      <div style="display: inline-block; padding: 15px 30px; background: white; border-radius: 10px;">
-        ⏳ Processando...
+        <div class="table-container">
+          <table id="tabelaUsuarios">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Perfil</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usuariosTableBody">
+              <tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Modal Novo Usuário -->
+  <div class="modal" id="modalNovoUsuario">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Criar Novo Usuário</h3>
+        <span class="close" onclick="fecharModalNovoUsuario()">&times;</span>
+      </div>
+      <form onsubmit="event.preventDefault(); criarUsuario()">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" id="novoNome" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="novoEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Senha (mínimo 6 caracteres)</label>
+          <input type="password" id="novoSenha" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label>Perfil</label>
+          <select id="novoPerfil">
+            <option value="operador">Operador</option>
+            <option value="admin_empresa">Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="novoStatus">
+            <option value="ativo">Ativo (acesso imediato)</option>
+            <option value="pendente" selected>Pendente (aguardando aprovação)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;">Criar Usuário</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <script>
-    const BASE = "/Frete-inteligente-";
+    // Configuração do Firebase (use a mesma do projeto)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
+      authDomain: "rota-22c3b.firebaseapp.com",
+      databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com/",
+      projectId: "rota-22c3b",
+      storageBucket: "rota-22c3b.appspot.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-    // Função para selecionar plano
-    function selecionarPlano(plano) {
-      localStorage.setItem('plano_selecionado', plano);
-      
-      // Mostra a seção de informações da empresa
-      document.getElementById('infoEmpresa').style.display = 'block';
-      
-      // Atualiza o texto do plano selecionado
-      const planoNomes = {
-        'starter': 'Starter',
-        'pro': 'Pro',
-        'enterprise': 'Enterprise'
-      };
-      document.getElementById('planoSelecionado').textContent = planoNomes[plano] || 'Starter';
-      
-      // Scroll suave até as informações
-      document.getElementById('infoEmpresa').scrollIntoView({ behavior: 'smooth' });
+    // Variáveis globais
+    let usuarioAtual = null;
+    let empresaId = localStorage.getItem('empresa_id');
+    let perfil = localStorage.getItem('perfil');
+
+    // Redireciona se não estiver logado ou não for admin_empresa
+    if (!empresaId || (perfil !== 'admin_empresa' && perfil !== 'admin_plataforma')) {
+      window.location.href = '/Frete-inteligente-/Login/index.html';
     }
 
-    // Função para criar empresa
-    function criarEmpresa() {
-      const loading = document.getElementById('loading');
-      loading.style.display = 'block';
-      
-      // Simula criação da empresa
-      setTimeout(() => {
-        loading.style.display = 'none';
-        alert('Empresa criada com sucesso! Aguarde aprovação do administrador.');
-        // Aqui você pode redirecionar ou mostrar mensagem de sucesso
-      }, 1500);
-    }
-
-    // Verifica se já existe plano selecionado ao carregar a página
+    // Carregar dados iniciais
     window.onload = function() {
-      const planoSalvo = localStorage.getItem('plano_selecionado');
-      if (planoSalvo) {
-        selecionarPlano(planoSalvo);
-      }
+      carregarDadosEmpresa();
+      carregarUsuarios(); // Pré-carrega, mas só mostra se aba usuários estiver ativa
+      document.getElementById('abaDados').style.display = 'block';
+      document.getElementById('abaUsuarios').style.display = 'none';
     };
 
-    // Função de fallback caso o onclick do botão não funcione
-    function irParaLogin() {
-      window.location.href = BASE + '/Login/index.html';
+    // Função para alternar abas
+    function mudarAba(aba) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('ativo'));
+      if (aba === 'dados') {
+        document.querySelector('.tab').classList.add('ativo');
+        document.getElementById('abaDados').style.display = 'block';
+        document.getElementById('abaUsuarios').style.display = 'none';
+      } else {
+        document.querySelectorAll('.tab')[1].classList.add('ativo');
+        document.getElementById('abaDados').style.display = 'none';
+        document.getElementById('abaUsuarios').style.display = 'block';
+        carregarUsuarios(); // atualiza lista
+      }
     }
+
+    // Carregar dados da empresa
+    function carregarDadosEmpresa() {
+      showLoading();
+      db.ref('empresas/' + empresaId).once('value').then(snap => {
+        hideLoading();
+        const empresa = snap.val();
+        if (empresa) {
+          document.getElementById('razaoSocial').value = empresa.nome_fantasia || '';
+          document.getElementById('cnpj').value = empresa.cnpj || '';
+          document.getElementById('telefone').value = empresa.telefone || '';
+          document.getElementById('endereco').value = empresa.endereco || '';
+        } else {
+          alert('Empresa não encontrada.');
+        }
+      }).catch(err => {
+        hideLoading();
+        alert('Erro ao carregar empresa: ' + err.message);
+      });
+    }
+
+    // Salvar dados da empresa
+    function salvarDadosEmpresa() {
+      const dados = {
+        nome_fantasia: document.getElementById('razaoSocial').value,
+        telefone: document.getElementById('telefone').value,
+        endereco: document.getElementById('endereco').value
+      };
+      showLoading();
+      db.ref('empresas/' + empresaId).update(dados).then(() => {
+        hideLoading();
+        alert('✅ Dados atualizados com sucesso!');
+      }).catch(err => {
+        hideLoading();
+        alert('Erro: ' + err.message);
+      });
+    }
+
+    // Carregar usuários da empresa
+    function carregarUsuarios() {
+      const tbody = document.getElementById('usuariosTableBody');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
+      
+      db.ref('usuarios').orderByChild('empresa_id').equalTo(empresaId).once('value').then(snap => {
+        const usuarios = snap.val();
+        tbody.innerHTML = '';
+        if (!usuarios) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>';
+          return;
+        }
+        Object.keys(usuarios).forEach(uid => {
+          const u = usuarios[uid];
+          const row = document.createElement('tr');
+          const statusClass = u.status === 'ativo' ? 'ativo' : 'pendente';
+          const statusText = u.status === 'ativo' ? 'Ativo' : 'Pendente';
+          let botoes = '';
+          if (u.status === 'pendente') {
+            botoes = `<button class="btn-success" onclick="aprovarUsuario('${uid}')">Aprovar</button>`;
+          } else {
+            botoes = `<button class="btn-danger" onclick="suspenderUsuario('${uid}')">Suspender</button>`;
+          }
+          // Não permite suspender o próprio admin principal? Pode, mas cuidado.
+          row.innerHTML = `
+            <td>${u.nome || '---'}</td>
+            <td>${u.email}</td>
+            <td>${u.perfil === 'admin_empresa' ? 'Admin' : 'Operador'}</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td class="acoes">${botoes}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }).catch(err => {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Erro ao carregar.</td></tr>';
+        console.error(err);
+      });
+    }
+
+    // Aprovar usuário
+    function aprovarUsuario(uid) {
+      if (!confirm('Deseja aprovar este usuário?')) return;
+      showLoading();
+      db.ref('usuarios/' + uid).update({ status: 'ativo' }).then(() => {
+        hideLoading();
+        alert('✅ Usuário aprovado!');
+        carregarUsuarios();
+      }).catch(err => {
+        hideLoading();
+        alert('Erro: ' + err.message);
+      });
+    }
+
+    // Suspender usuário
+    function suspenderUsuario(uid) {
+      if (!confirm('Deseja suspender este usuário?')) return;
+      showLoading();
+      db.ref('usuarios/' + uid).update({ status: 'inativo' }).then(() => {
+        hideLoading();
+        alert('⚠️ Usuário suspenso!');
+        carregarUsuarios();
+      }).catch(err => {
+        hideLoading();
+        alert('Erro: ' + err.message);
+      });
+    }
+
+    // Modal novo usuário
+    function abrirModalNovoUsuario() {
+      document.getElementById('modalNovoUsuario').classList.add('active');
+    }
+    function fecharModalNovoUsuario() {
+      document.getElementById('modalNovoUsuario').classList.remove('active');
+    }
+
+    // Criar usuário
+    async function criarUsuario() {
+      const nome = document.getElementById('novoNome').value.trim();
+      const email = document.getElementById('novoEmail').value.trim();
+      const senha = document.getElementById('novoSenha').value;
+      const perfil = document.getElementById('novoPerfil').value;
+      const status = document.getElementById('novoStatus').value;
+
+      if (!nome || !email || !senha) {
+        alert('Preencha todos os campos');
+        return;
+      }
+      if (senha.length < 6) {
+        alert('Senha deve ter pelo menos 6 caracteres');
+        return;
+      }
+
+      showLoading();
+      try {
+        // Cria usuário no Auth
+        const cred = await auth.createUserWithEmailAndPassword(email, senha);
+        const uid = cred.user.uid;
+
+        // Salva no banco
+        await db.ref('usuarios/' + uid).set({
+          nome: nome,
+          email: email,
+          perfil: perfil,
+          empresa_id: empresaId,
+          status: status,
+          data_cadastro: Date.now()
+        });
+
+        // Atualiza contador de usuários ativos na empresa (opcional)
+        if (status === 'ativo') {
+          const snap = await db.ref('empresas/' + empresaId + '/usuarios_ativos').once('value');
+          const atuais = snap.val() || 0;
+          await db.ref('empresas/' + empresaId).update({ usuarios_ativos: atuais + 1 });
+        }
+
+        hideLoading();
+        alert('✅ Usuário criado com sucesso!');
+        fecharModalNovoUsuario();
+        carregarUsuarios();
+        // Limpa campos
+        document.getElementById('novoNome').value = '';
+        document.getElementById('novoEmail').value = '';
+        document.getElementById('novoSenha').value = '';
+      } catch (error) {
+        hideLoading();
+        alert('Erro: ' + error.message);
+      }
+    }
+
+    // Logout
+    function sair() {
+      auth.signOut().then(() => {
+        localStorage.clear();
+        window.location.href = '/Frete-inteligente-/Login/index.html';
+      });
+    }
+
+    // Utilitários
+    function showLoading() {
+      document.getElementById('loading').classList.add('active');
+    }
+    function hideLoading() {
+      document.getElementById('loading').classList.remove('active');
+    }
+
+    // Fechar modal ao clicar fora
+    window.onclick = function(event) {
+      const modal = document.getElementById('modalNovoUsuario');
+      if (event.target === modal) fecharModalNovoUsuario();
+    };
   </script>
 </body>
 </html>
