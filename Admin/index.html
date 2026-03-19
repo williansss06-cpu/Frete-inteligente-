@@ -523,20 +523,20 @@
             </div>
             <div class="summary-row">
               <span>Status inicial</span>
-              <strong>Ativo</strong>
+              <strong>Pendente (aguardando aprovação)</strong>
             </div>
           </div>
 
           <div class="actions">
             <button type="submit" class="btn btn-primary">Criar empresa e começar</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='login/'">Já tenho conta</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">Já tenho conta</button>
           </div>
 
           <div id="msg" class="msg"></div>
 
           <div class="footer-note">
-            Ao concluir o cadastro, a empresa será criada no sistema, o administrador principal será vinculado automaticamente
-            e o ambiente ficará pronto para uso conforme o plano selecionado.
+            Ao concluir o cadastro, a empresa será criada no sistema com status "pendente".
+            O administrador do sistema irá aprovar seu acesso em até 24h.
           </div>
         </form>
       </div>
@@ -549,7 +549,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    // 🔥 SEUS DADOS DO FIREBASE - CORRETOS!
+    // 🔥 CONFIGURAÇÃO DO FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
       authDomain: "rota-22c3b.firebaseapp.com",
@@ -564,7 +564,7 @@
     // Inicializar Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
-      console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
+      console.log("✅ Firebase inicializado");
     }
 
     const db = firebase.database();
@@ -635,7 +635,7 @@
       const empresa_nome = document.getElementById("empresa_nome").value.trim();
       const empresa_cnpj_formatado = document.getElementById("empresa_cnpj").value.trim();
       const empresa_cnpj = onlyDigits(empresa_cnpj_formatado);
-      const empresa_segmento = document.getElementById("empresa_segmento").value.trim();
+      const empresa_segmento = document.getElementById("empresa_segmento").value;
       const empresa_cidade = document.getElementById("empresa_cidade").value.trim();
       const empresa_uf = document.getElementById("empresa_uf").value.trim().toUpperCase();
       const empresa_obs = document.getElementById("empresa_obs").value.trim();
@@ -688,7 +688,6 @@
 
         await empresaRef.set({
           nome: empresa_nome,
-          nome_fantasia: empresa_nome,
           cnpj: empresa_cnpj,
           cnpj_formatado: empresa_cnpj_formatado,
           segmento: empresa_segmento || "nao_informado",
@@ -697,7 +696,7 @@
           observacoes: empresa_obs || "",
           plano: planoSelecionado,
           usuarios_limite: getUsuariosLimite(planoSelecionado),
-          status: "ativo",
+          status: "pendente",
           criado_em: Date.now()
         });
 
@@ -712,24 +711,20 @@
           criado_em: Date.now()
         });
 
-        // Salvar dados na sessão
-        localStorage.setItem("usuario_id", uid);
-        localStorage.setItem("usuario_nome", admin_nome);
-        localStorage.setItem("usuario_email", admin_email);
-        localStorage.setItem("empresa_id", empresa_id);
-        localStorage.setItem("perfil", "admin_empresa");
-        localStorage.setItem("cliente_cnpj", empresa_cnpj);
-        localStorage.setItem("cliente_cnpj_formatado", empresa_cnpj_formatado);
-
-        // Sucesso!
+        // ✅ SUCESSO - CORRIGIDO!
         msg.className = "msg success";
-        msg.textContent = "✅ Empresa criada com sucesso! Redirecionando...";
+        msg.innerHTML = `
+          <strong>✅ Cadastro realizado com sucesso!</strong><br><br>
+          ✓ Empresa criada<br>
+          ✓ Administrador registrado<br>
+          ✓ Aguardando aprovação do sistema<br><br>
+          <span style="font-size:12px;">Você será redirecionado em 3 segundos...</span>
+        `;
 
-        console.log("✅ Cadastro completo:", { empresa_id, uid });
-
+        // 🔥 CORREÇÃO: Redirecionar para index.html na mesma pasta
         setTimeout(() => {
-          window.location.href = "empresa/";
-        }, 1500);
+          window.location.href = 'index.html';
+        }, 3000);
 
       } catch (error) {
         console.error("Erro no cadastro:", error);
