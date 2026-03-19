@@ -1042,7 +1042,7 @@
           </div>
         </section>
 
-        <!-- PAINEL EMPRESA (CORRIGIDO) -->
+        <!-- PAINEL EMPRESA -->
         <section class="panel" id="panel-empresa">
           <div class="card" style="margin-bottom:20px;">
             <div class="panel-head">
@@ -1099,7 +1099,7 @@
           </div>
         </section>
 
-        <!-- PAINEL ADMIN (CORRIGIDO) -->
+        <!-- PAINEL ADMIN -->
         <section class="panel" id="panel-admin">
           <div class="admin-card">
             <div class="admin-header">
@@ -1327,8 +1327,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
   <script>
-    const BASE = "/Frete-inteligente-";
-
     // 🔥 CONFIGURAÇÃO DO FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
@@ -1350,7 +1348,7 @@
     const auth = firebase.auth();
 
     // ==============================================
-    // VERIFICAÇÃO DE LOGIN
+    // VERIFICAÇÃO DE LOGIN (CORRIGIDA)
     // ==============================================
     (async function verificarLogin() {
       const usuarioId = localStorage.getItem("usuario_id");
@@ -1361,7 +1359,7 @@
 
       if (!usuarioId) {
         alert("Sessão expirada - Faça login novamente");
-        window.location.href = 'Login/index.html';
+        window.location.href = 'Login/index.html';  // ✅ CORRIGIDO
         return;
       }
 
@@ -1374,14 +1372,14 @@
           if (empresaData && empresaData.status === 'pendente') {
             alert('⏳ Sua empresa ainda está pendente de aprovação. Aguarde o administrador.');
             localStorage.clear();
-            window.location.href = 'index.html';
+            window.location.href = 'Login/index.html';  // ✅ CORRIGIDO
             return;
           }
           
           if (empresaData && empresaData.status === 'inativo') {
             alert('❌ Empresa inativa. Contate o administrador.');
             localStorage.clear();
-            window.location.href = 'index.html';
+            window.location.href = 'Login/index.html';  // ✅ CORRIGIDO
             return;
           }
         } catch (error) {
