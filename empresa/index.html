@@ -10,6 +10,7 @@ body { font-family: Arial; background: #f1f5f9; }
 .card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
 button { padding: 10px; background: #0f766e; color: white; border: none; border-radius: 6px; cursor: pointer; }
 input, select { width: 100%; padding: 10px; margin-bottom: 10px; }
+.topo { display:flex; justify-content:space-between; align-items:center; }
 </style>
 </head>
 
@@ -17,11 +18,21 @@ input, select { width: 100%; padding: 10px; margin-bottom: 10px; }
 
 <div class="container">
 
-<h1>Painel da Empresa</h1>
-<button onclick="sair()">Sair</button>
+<div class="topo">
+  <h1>Painel da Empresa</h1>
+  <button onclick="sair()">Sair</button>
+</div>
 
+<!-- 🔓 ACESSO AO SISTEMA -->
+<div class="card">
+  <h3>Acesso</h3>
+  <button onclick="abrirSistema()">Abrir Sistema</button>
+</div>
+
+<!-- 👥 CRIAR USUÁRIO -->
 <div class="card">
 <h3>Criar usuário</h3>
+
 <input id="nome" placeholder="Nome">
 <input id="email" placeholder="Email">
 <input id="senha" type="password" placeholder="Senha">
@@ -35,6 +46,7 @@ input, select { width: 100%; padding: 10px; margin-bottom: 10px; }
 <div id="msg"></div>
 </div>
 
+<!-- 📊 LISTA -->
 <div class="card">
 <h3>Usuários cadastrados</h3>
 <div id="listaUsuarios"></div>
@@ -48,11 +60,14 @@ input, select { width: 100%; padding: 10px; margin-bottom: 10px; }
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
+const BASE = "/Frete-inteligente-";
+
 const firebaseConfig = {
   apiKey: "SUA_API_KEY",
-  authDomain: "SEU_DOMINIO",
-  databaseURL: "SUA_DATABASE",
-  projectId: "SEU_ID",
+  authDomain: "rota-22c3b.firebaseapp.com",
+  databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com/",
+  projectId: "rota-22c3b",
+  storageBucket: "rota-22c3b.appspot.com"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -61,29 +76,35 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 
-// 🔐 1. PROTEÇÃO DE PÁGINA
+// 🔐 PROTEÇÃO
 const usuario = localStorage.getItem("usuario_id");
 if (!usuario) {
-  window.location.href = "/Frete-inteligente-/Login/index.html";
+  window.location.href = BASE + "/Login/index.html";
 }
 
-// 🧠 4. CONTROLE DE PERMISSÃO
-const perfilLogado = localStorage.getItem("perfil");
-if (perfilLogado !== "admin_empresa") {
+// 🧠 CONTROLE DE PERFIL
+const perfil = localStorage.getItem("perfil");
+if (perfil !== "admin_empresa") {
   alert("Acesso restrito");
 }
 
 
-// 🚪 2. LOGOUT REAL
+// 🚪 LOGOUT
 function sair() {
   auth.signOut().then(() => {
     localStorage.clear();
-    window.location.href = "/Frete-inteligente-/Login/index.html";
+    window.location.href = BASE + "/Login/index.html";
   });
 }
 
 
-// 👥 3. CRIAR USUÁRIO
+// 🔥 ABRIR SISTEMA (CORRIGIDO)
+function abrirSistema() {
+  window.location.href = BASE + "/Sistema/index.html";
+}
+
+
+// 👥 CRIAR USUÁRIO
 async function criarUsuario() {
   const nome = document.getElementById("nome").value;
   const email = document.getElementById("email").value;
@@ -113,7 +134,7 @@ async function criarUsuario() {
 }
 
 
-// 📊 5. LISTAR USUÁRIOS
+// 📊 LISTAR USUÁRIOS
 function carregarUsuarios() {
   const lista = document.getElementById("listaUsuarios");
   lista.innerHTML = "";
@@ -136,7 +157,7 @@ function carregarUsuarios() {
 }
 
 
-// carregar ao abrir
+// iniciar
 carregarUsuarios();
 
 </script>
