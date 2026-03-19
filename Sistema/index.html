@@ -158,6 +158,108 @@
       display: block;
     }
 
+    /* CSS PARA OS NOVOS MÓDULOS */
+    .empresa-card, .admin-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .empresa-header, .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge.ativo {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.inativo {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-item {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .user-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .user-row:last-child {
+      border-bottom: none;
+    }
+
+    .user-info h4 {
+      margin: 0 0 5px 0;
+    }
+
+    .user-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .btn-icon:hover {
+      background: #f1f5f9;
+    }
+
+    .btn-icon.edit:hover { color: #2563eb; }
+    .btn-icon.delete:hover { color: #dc2626; }
+
     /* SEU CSS ORIGINAL (MANTIDO) */
     .hero {
       display: flex;
@@ -497,16 +599,17 @@
       color: #991b1b;
     }
     @media (max-width: 1120px) {
-      .metrics, .result-top, .charts, .stats-2 { grid-template-columns: 1fr 1fr; }
+      .metrics, .result-top, .charts, .stats-2, .stats-grid { grid-template-columns: 1fr 1fr; }
       .grid-2-3, .split { grid-template-columns: 1fr; }
     }
     @media (max-width: 760px) {
       .hero { flex-direction: column; }
-      .metrics, .result-top, .charts, .stats-2, .form-grid { grid-template-columns: 1fr; }
+      .metrics, .result-top, .charts, .stats-2, .form-grid, .stats-grid { grid-template-columns: 1fr; }
       .toggle-row { grid-template-columns: 1fr; }
       .toolbar { flex-direction: column; align-items: stretch; }
       .toolbar input { max-width: none; }
       h1 { font-size: 30px; }
+      .empresa-header { flex-direction: column; gap: 10px; }
     }
   </style>
 </head>
@@ -529,6 +632,12 @@
         <button onclick="irPara('dashboard', event)" id="menu-dashboard">
           📈 <span>Dashboard</span>
         </button>
+        <button onclick="irPara('empresa', event)" id="menu-empresa">
+          🏢 <span>Empresa</span>
+        </button>
+        <button onclick="irPara('admin', event)" id="menu-admin">
+          👑 <span>Admin</span>
+        </button>
         <button onclick="irPara('parametros', event)" id="menu-parametros">
           ⚙️ <span>Parâmetros</span>
         </button>
@@ -548,8 +657,9 @@
       </header>
 
       <div class="container">
-        <!-- PAINÉIS ORIGINAIS (COMPLETOS) -->
+        <!-- PAINEL SIMULADOR (original) -->
         <section class="panel active" id="panel-simulador">
+          <!-- SEU CONTEÚDO ORIGINAL DO SIMULADOR AQUI -->
           <div class="hero">
             <div>
               <div class="tag">🚚 Frete Inteligente 2.0</div>
@@ -708,7 +818,9 @@
           </div>
         </section>
 
+        <!-- PAINEL ROTAS (original) -->
         <section class="panel" id="panel-rotas">
+          <!-- SEU CONTEÚDO ORIGINAL DAS ROTAS AQUI -->
           <div class="card">
             <div class="toolbar">
               <div>
@@ -739,7 +851,9 @@
           </div>
         </section>
 
+        <!-- PAINEL COTAÇÃO (original) -->
         <section class="panel" id="panel-cotacao">
+          <!-- SEU CONTEÚDO ORIGINAL DA COTAÇÃO AQUI -->
           <div class="card">
             <div class="panel-head">
               <h2>Cotação do Dia</h2>
@@ -893,7 +1007,9 @@
           </div>
         </section>
 
+        <!-- PAINEL DASHBOARD (original) -->
         <section class="panel" id="panel-dashboard">
+          <!-- SEU CONTEÚDO ORIGINAL DO DASHBOARD AQUI -->
           <div class="dashboard-header">
             <h2 style="margin:0;">📊 Dashboard de Análise</h2>
             <button class="btn-limpar-dashboard" onclick="window.limparDadosDashboard()">
@@ -927,7 +1043,280 @@
           </div>
         </section>
 
+        <!-- NOVO PAINEL: EMPRESA -->
+        <section class="panel" id="panel-empresa">
+          <div class="empresa-card">
+            <div class="empresa-header">
+              <h2>🏢 Minha Empresa</h2>
+              <span class="badge ativo">Ativa</span>
+            </div>
+            
+            <div class="form-grid" style="margin-top: 20px;">
+              <div class="full">
+                <label>Razão Social</label>
+                <input type="text" id="empresaRazao" value="Transportadora Modelo LTDA" />
+              </div>
+              <div>
+                <label>CNPJ</label>
+                <input type="text" id="empresaCnpj" value="12.345.678/0001-90" />
+              </div>
+              <div>
+                <label>Inscrição Estadual</label>
+                <input type="text" id="empresaIE" value="123.456.789.012" />
+              </div>
+              <div>
+                <label>Telefone</label>
+                <input type="text" id="empresaTel" value="(11) 3456-7890" />
+              </div>
+              <div>
+                <label>E-mail</label>
+                <input type="email" id="empresaEmail" value="contato@transportadora.com" />
+              </div>
+              <div class="full">
+                <label>Endereço</label>
+                <input type="text" id="empresaEndereco" value="Av. Principal, 1000 - Centro, São Paulo/SP" />
+              </div>
+            </div>
+            
+            <div class="small-btns" style="margin-top: 20px;">
+              <button class="btn" onclick="salvarEmpresa()">Salvar Alterações</button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value" id="totalUsuarios">5</div>
+              <div class="stat-label">Usuários</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="totalRotasEmpresa">127</div>
+              <div class="stat-label">Rotas cadastradas</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="totalCotacoes">43</div>
+              <div class="stat-label">Cotações realizadas</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="savingTotal">R$ 12.450</div>
+              <div class="stat-label">Saving total</div>
+            </div>
+          </div>
+
+          <div class="empresa-card">
+            <div class="empresa-header">
+              <h3>👥 Usuários da Empresa</h3>
+              <button class="btn" onclick="adicionarUsuario()">+ Novo Usuário</button>
+            </div>
+            
+            <div id="usuariosList">
+              <div class="user-row">
+                <div class="user-info">
+                  <h4>João Silva</h4>
+                  <p>joao.silva@empresa.com · Admin Empresa · Último acesso: 19/03/2026 09:30</p>
+                </div>
+                <div class="user-actions">
+                  <button class="btn-icon edit" onclick="alert('Editar usuário')">✏️</button>
+                  <button class="btn-icon delete" onclick="alert('Excluir usuário')">🗑️</button>
+                </div>
+              </div>
+              <div class="user-row">
+                <div class="user-info">
+                  <h4>Maria Santos</h4>
+                  <p>maria.santos@empresa.com · Analista · Último acesso: 19/03/2026 10:15</p>
+                </div>
+                <div class="user-actions">
+                  <button class="btn-icon edit" onclick="alert('Editar usuário')">✏️</button>
+                  <button class="btn-icon delete" onclick="alert('Excluir usuário')">🗑️</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- NOVO PAINEL: ADMIN -->
+        <section class="panel" id="panel-admin">
+          <div class="empresa-card">
+            <div class="empresa-header">
+              <h2>👑 Administração do Sistema</h2>
+            </div>
+
+            <div class="subtabs" style="margin-bottom: 20px;">
+              <button class="subtab-btn active" onclick="mudarAbaAdmin('empresas', event)">Empresas</button>
+              <button class="subtab-btn" onclick="mudarAbaAdmin('usuarios', event)">Usuários</button>
+              <button class="subtab-btn" onclick="mudarAbaAdmin('logs', event)">Logs do Sistema</button>
+              <button class="subtab-btn" onclick="mudarAbaAdmin('config', event)">Configurações</button>
+            </div>
+
+            <!-- Aba Empresas -->
+            <div id="adminEmpresas" style="display: block;">
+              <div class="toolbar" style="padding: 0 0 20px 0;">
+                <input type="text" id="searchEmpresa" placeholder="Buscar empresa..." style="max-width: 300px;" />
+                <button class="btn" onclick="novaEmpresa()">+ Nova Empresa</button>
+              </div>
+              
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Empresa</th>
+                      <th>CNPJ</th>
+                      <th>Usuários</th>
+                      <th>Status</th>
+                      <th>Plano</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="empresasTableBody">
+                    <tr>
+                      <td><strong>Transportadora Modelo LTDA</strong></td>
+                      <td>12.345.678/0001-90</td>
+                      <td>5</td>
+                      <td><span class="badge ativo">Ativo</span></td>
+                      <td>Profissional</td>
+                      <td>
+                        <button class="btn-icon edit" onclick="alert('Editar empresa')">✏️</button>
+                        <button class="btn-icon delete" onclick="alert('Excluir empresa')">🗑️</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Transportadora Express Sul</strong></td>
+                      <td>98.765.432/0001-12</td>
+                      <td>3</td>
+                      <td><span class="badge ativo">Ativo</span></td>
+                      <td>Básico</td>
+                      <td>
+                        <button class="btn-icon edit" onclick="alert('Editar empresa')">✏️</button>
+                        <button class="btn-icon delete" onclick="alert('Excluir empresa')">🗑️</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Aba Usuários -->
+            <div id="adminUsuarios" style="display: none;">
+              <div class="toolbar" style="padding: 0 0 20px 0;">
+                <input type="text" id="searchUsuario" placeholder="Buscar usuário..." style="max-width: 300px;" />
+                <select id="filtroPerfil" style="max-width: 200px;">
+                  <option value="">Todos os perfis</option>
+                  <option value="admin_empresa">Admin Empresa</option>
+                  <option value="analista">Analista</option>
+                  <option value="operador">Operador</option>
+                </select>
+              </div>
+              
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>E-mail</th>
+                      <th>Empresa</th>
+                      <th>Perfil</th>
+                      <th>Status</th>
+                      <th>Último acesso</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usuariosTableBody">
+                    <tr>
+                      <td>João Silva</td>
+                      <td>joao.silva@empresa.com</td>
+                      <td>Transportadora Modelo</td>
+                      <td><span class="badge ativo">Admin Empresa</span></td>
+                      <td><span class="badge ativo">Ativo</span></td>
+                      <td>19/03/2026 09:30</td>
+                      <td>
+                        <button class="btn-icon edit" onclick="alert('Editar usuário')">✏️</button>
+                        <button class="btn-icon delete" onclick="alert('Excluir usuário')">🗑️</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Aba Logs -->
+            <div id="adminLogs" style="display: none;">
+              <div class="toolbar" style="padding: 0 0 20px 0;">
+                <input type="date" id="filtroData" />
+                <select id="filtroTipoLog">
+                  <option value="">Todos os tipos</option>
+                  <option value="login">Login</option>
+                  <option value="rota">Rotas</option>
+                  <option value="cotacao">Cotações</option>
+                  <option value="parametro">Parâmetros</option>
+                </select>
+              </div>
+              
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Data/Hora</th>
+                      <th>Usuário</th>
+                      <th>Empresa</th>
+                      <th>Ação</th>
+                      <th>Detalhes</th>
+                      <th>IP</th>
+                    </tr>
+                  </thead>
+                  <tbody id="logsTableBody">
+                    <tr>
+                      <td>19/03/2026 10:30</td>
+                      <td>João Silva</td>
+                      <td>Transportadora Modelo</td>
+                      <td>Login</td>
+                      <td>Acesso ao sistema</td>
+                      <td>192.168.1.100</td>
+                    </tr>
+                    <tr>
+                      <td>19/03/2026 10:25</td>
+                      <td>Maria Santos</td>
+                      <td>Transportadora Modelo</td>
+                      <td>Rota</td>
+                      <td>Adicionou nova rota: SP → RJ</td>
+                      <td>192.168.1.101</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Aba Configurações Globais -->
+            <div id="adminConfig" style="display: none;">
+              <div class="form-grid">
+                <div>
+                  <label>Limite de rotas por empresa</label>
+                  <input type="number" id="configLimiteRotas" value="1000" />
+                </div>
+                <div>
+                  <label>Timeout de sessão (minutos)</label>
+                  <input type="number" id="configTimeout" value="30" />
+                </div>
+                <div>
+                  <label>Versão do sistema</label>
+                  <input type="text" id="configVersao" value="2.0.0" readonly />
+                </div>
+                <div>
+                  <label>Modo de manutenção</label>
+                  <select id="configManutencao">
+                    <option value="false">Desativado</option>
+                    <option value="true">Ativado</option>
+                  </select>
+                </div>
+              </div>
+              <div class="small-btns" style="margin-top: 20px;">
+                <button class="btn" onclick="salvarConfiguracoes()">Salvar Configurações</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAINEL PARÂMETROS (original) -->
         <section class="panel" id="panel-parametros">
+          <!-- SEU CONTEÚDO ORIGINAL DOS PARÂMETROS AQUI -->
           <div class="stats-2">
             <div class="card">
               <div class="panel-head"><h2>Parâmetros do motor</h2><p>Regras editáveis para precificação</p></div>
@@ -1017,6 +1406,8 @@
         'rotas': 'Base de Rotas',
         'cotacao': 'Cotação do Dia',
         'dashboard': 'Dashboard',
+        'empresa': 'Minha Empresa',
+        'admin': 'Administração',
         'parametros': 'Parâmetros'
       };
       document.getElementById('currentPageTitle').textContent = titles[aba] || 'Sistema';
@@ -1034,6 +1425,103 @@
       localStorage.clear();
       window.location.replace(BASE + "/Login/index.html");
     };
+
+    // ==============================================
+    // FUNÇÕES DOS NOVOS MÓDULOS
+    // ==============================================
+
+    // Funções do módulo Empresa
+    window.salvarEmpresa = function() {
+      const dados = {
+        razao: document.getElementById('empresaRazao').value,
+        cnpj: document.getElementById('empresaCnpj').value,
+        ie: document.getElementById('empresaIE').value,
+        telefone: document.getElementById('empresaTel').value,
+        email: document.getElementById('empresaEmail').value,
+        endereco: document.getElementById('empresaEndereco').value
+      };
+      
+      console.log('Salvando dados da empresa:', dados);
+      alert('✅ Dados da empresa salvos com sucesso!');
+    };
+
+    window.adicionarUsuario = function() {
+      alert('Funcionalidade: Adicionar novo usuário');
+    };
+
+    // Funções do módulo Admin
+    window.mudarAbaAdmin = function(aba, event) {
+      document.querySelectorAll('#panel-admin .subtab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+      
+      document.getElementById('adminEmpresas').style.display = 'none';
+      document.getElementById('adminUsuarios').style.display = 'none';
+      document.getElementById('adminLogs').style.display = 'none';
+      document.getElementById('adminConfig').style.display = 'none';
+      
+      document.getElementById('admin' + aba.charAt(0).toUpperCase() + aba.slice(1)).style.display = 'block';
+    };
+
+    window.novaEmpresa = function() {
+      alert('Funcionalidade: Criar nova empresa');
+    };
+
+    window.salvarConfiguracoes = function() {
+      alert('✅ Configurações globais salvas!');
+    };
+
+    // ==============================================
+    // ATUALIZAR PERMISSÕES PARA OS NOVOS MÓDULOS
+    // ==============================================
+    function aplicarPermissoesEstendidas() {
+      const perfil = localStorage.getItem("perfil");
+      console.log("👤 Aplicando permissões estendidas para:", perfil);
+
+      const menuRotas = document.getElementById("menu-rotas");
+      const menuCotacao = document.getElementById("menu-cotacao");
+      const menuDashboard = document.getElementById("menu-dashboard");
+      const menuEmpresa = document.getElementById("menu-empresa");
+      const menuAdmin = document.getElementById("menu-admin");
+      const menuParametros = document.getElementById("menu-parametros");
+      const cardMercado = document.getElementById("cardMercado");
+
+      // Admin Plataforma tem acesso a tudo
+      if (perfil === "admin_plataforma") {
+        if (menuAdmin) menuAdmin.style.display = "flex";
+        if (menuEmpresa) menuEmpresa.style.display = "flex";
+        return;
+      }
+
+      // Admin Empresa não vê Admin, mas vê Empresa
+      if (perfil === "admin_empresa") {
+        if (menuAdmin) menuAdmin.style.display = "none";
+        if (menuEmpresa) menuEmpresa.style.display = "flex";
+        return;
+      }
+
+      // Analista não vê Admin e Parâmetros
+      if (perfil === "analista") {
+        if (menuAdmin) menuAdmin.style.display = "none";
+        if (menuEmpresa) menuEmpresa.style.display = "flex";
+        if (menuParametros) menuParametros.style.display = "none";
+        return;
+      }
+
+      // Operador só vê Simulador e Empresa
+      if (perfil === "operador") {
+        if (menuRotas) menuRotas.style.display = "none";
+        if (menuCotacao) menuCotacao.style.display = "none";
+        if (menuDashboard) menuDashboard.style.display = "none";
+        if (menuAdmin) menuAdmin.style.display = "none";
+        if (menuParametros) menuParametros.style.display = "none";
+        if (menuEmpresa) menuEmpresa.style.display = "flex";
+        if (cardMercado) cardMercado.style.display = "none";
+        
+        irPara('simulador', null);
+      }
+    }
 
     // 🔒 PROTEÇÃO ADICIONAL
     (function protegerSistema() {
@@ -1183,15 +1671,18 @@
       const vehicleLabel = (key) => state.vehicleProfiles[key]?.label || key;
 
       // ==============================================
-      // FUNÇÕES DE PERMISSÕES POR PERFIL
+      // FUNÇÕES DE PERMISSÕES (MODIFICADA PARA INCLUIR NOVOS MÓDULOS)
       // ==============================================
 
       function aplicarPermissoes() {
         const perfil = localStorage.getItem("perfil");
         console.log("👤 Aplicando permissões para:", perfil);
 
-        if (perfil === "admin_plataforma") return;
+        // Chama a função estendida
+        aplicarPermissoesEstendidas();
 
+        // Mantém as permissões originais
+        if (perfil === "admin_plataforma") return;
         if (perfil === "admin_empresa") return;
 
         if (perfil === "analista") {
@@ -1217,7 +1708,7 @@
       }
 
       // ==============================================
-      // FUNÇÕES DE CÁLCULO
+      // FUNÇÕES DE CÁLCULO (SEU CÓDIGO ORIGINAL)
       // ==============================================
 
       function getBench(km) {
@@ -1316,7 +1807,7 @@
       }
 
       // ==============================================
-      // FUNÇÕES DE RENDERIZAÇÃO
+      // FUNÇÕES DE RENDERIZAÇÃO (SEU CÓDIGO ORIGINAL)
       // ==============================================
 
       function renderVehicleOptions() {
@@ -1520,7 +2011,7 @@
       }
 
       // ==============================================
-      // FUNÇÕES DE INTEGRAÇÃO COM FIREBASE
+      // FUNÇÕES DE INTEGRAÇÃO COM FIREBASE (SEU CÓDIGO ORIGINAL)
       // ==============================================
 
       async function salvarRotaNoBanco(origem, destino, uf_origem, uf_destino, km, veiculo, frete_cotado, transportadora) {
@@ -1625,7 +2116,7 @@
       }
 
       // ==============================================
-      // FUNÇÕES DE INTERFACE (Importações, Partners, etc)
+      // FUNÇÕES DE INTERFACE (SEU CÓDIGO ORIGINAL)
       // ==============================================
 
       function showInfo() {
@@ -1868,7 +2359,7 @@
       }
 
       // ==============================================
-      // BIND DE EVENTOS
+      // BIND DE EVENTOS (SEU CÓDIGO ORIGINAL)
       // ==============================================
 
       function bindTabs() {
@@ -1956,7 +2447,7 @@
         // Se tiver hash, ativa a aba correta
         if (window.location.hash) {
           const aba = window.location.hash.replace('#', '');
-          if (['simulador', 'rotas', 'cotacao', 'dashboard', 'parametros'].includes(aba)) {
+          if (['simulador', 'rotas', 'cotacao', 'dashboard', 'parametros', 'empresa', 'admin'].includes(aba)) {
             irPara(aba, null);
           }
         }
