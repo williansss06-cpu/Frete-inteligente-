@@ -264,7 +264,7 @@
     .btn-icon.edit:hover { color: #2563eb; }
     .btn-icon.delete:hover { color: #b91c1c; }
 
-    /* SEU CSS ORIGINAL CONTINUA ABAIXO */
+    /* SEU CSS ORIGINAL */
     .hero {
       display: flex;
       justify-content: space-between;
@@ -660,9 +660,8 @@
       </header>
 
       <div class="container">
-        <!-- PAINEL SIMULADOR (seu código original) -->
+        <!-- PAINEL SIMULADOR -->
         <section class="panel active" id="panel-simulador">
-          <!-- ... seu conteúdo do simulador ... -->
           <div class="hero">
             <div>
               <div class="tag">🚚 Frete Inteligente 2.0</div>
@@ -821,7 +820,7 @@
           </div>
         </section>
 
-        <!-- PAINEL ROTAS (seu código original) -->
+        <!-- PAINEL ROTAS -->
         <section class="panel" id="panel-rotas">
           <div class="card">
             <div class="toolbar">
@@ -853,7 +852,7 @@
           </div>
         </section>
 
-        <!-- PAINEL COTAÇÃO (seu código original) -->
+        <!-- PAINEL COTAÇÃO -->
         <section class="panel" id="panel-cotacao">
           <div class="card">
             <div class="panel-head">
@@ -866,16 +865,149 @@
               <button class="subtab-btn" data-target="dispatch">Disparo</button>
               <button class="subtab-btn" data-target="returns">Retornos</button>
             </div>
-            <!-- ... resto do conteúdo de cotação ... -->
+
             <div class="panel active" id="subpanel-imports">
               <div class="panel-body">
-                <!-- ... -->
+                <div class="stats-2">
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head" style="padding:20px 20px 0;">
+                      <h3>Importar tabela de custo</h3>
+                      <p>CSV com colunas: UF, TIPO_VEICULO, VALOR_KM</p>
+                    </div>
+                    <div class="panel-body">
+                      <input type="file" id="costFile" accept=".csv" />
+                      <div class="small-btns">
+                        <button class="btn" id="btnImportCost">Importar tabela de custo</button>
+                        <button class="btn secondary" id="btnSampleCost">Carregar exemplo</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head" style="padding:20px 20px 0;">
+                      <h3>Importar rotas do dia</h3>
+                      <p>CSV com colunas: ORIGEM, DESTINO, UF_ORIGEM, UF_DESTINO, KM, TIPO_VEICULO</p>
+                    </div>
+                    <div class="panel-body">
+                      <input type="file" id="dailyRoutesFile" accept=".csv" />
+                      <div class="small-btns">
+                        <button class="btn" id="btnImportRoutes">Importar rotas do dia</button>
+                        <button class="btn secondary" id="btnSampleRoutes">Carregar exemplo</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="alert" id="importAlert"></div>
+                <div class="stats-2" style="margin-top:16px;">
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head"><h3>Tabela de custo carregada</h3><p id="costSummary">Nenhuma tabela importada.</p></div>
+                    <div class="table-wrap">
+                      <table>
+                        <thead><tr><th>UF</th><th>Tipo veículo</th><th>Valor/km</th></tr></thead>
+                        <tbody id="costTableBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head"><h3>Rotas do dia</h3><p id="dailySummary">Nenhuma rota importada.</p></div>
+                    <div class="table-wrap">
+                      <table>
+                        <thead><tr><th>Origem</th><th>Destino</th><th>UF</th><th>Km</th><th>Veículo</th></tr></thead>
+                        <tbody id="dailyRoutesBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="subpanel-partners">
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div>
+                    <label for="partnerName">Nome da transportadora</label>
+                    <input id="partnerName" placeholder="Ex.: Transportadora Alpha" />
+                  </div>
+                  <div>
+                    <label for="partnerEmail">E-mail</label>
+                    <input id="partnerEmail" placeholder="contato@transportadora.com" />
+                  </div>
+                </div>
+                <div class="small-btns">
+                  <button class="btn" id="btnAddPartner">Adicionar transportadora</button>
+                  <button class="btn secondary" id="btnSamplePartners">Carregar exemplos</button>
+                </div>
+                <div class="table-wrap" style="padding:20px 0 0;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Selecionar</th>
+                        <th>Transportadora</th>
+                        <th>E-mail</th>
+                        <th>Convites</th>
+                        <th>Respostas</th>
+                        <th>Taxa atendimento</th>
+                      </tr>
+                    </thead>
+                    <tbody id="partnersBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="subpanel-dispatch">
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div>
+                    <label for="mailSubject">Assunto do e-mail</label>
+                    <input id="mailSubject" value="Solicitação de Cotação de Frete - Rotas do Dia" />
+                  </div>
+                  <div>
+                    <label for="mailDeadline">Prazo para resposta</label>
+                    <input id="mailDeadline" value="Hoje até 17:00" />
+                  </div>
+                  <div class="full">
+                    <label for="mailMessage">Mensagem padrão</label>
+                    <textarea id="mailMessage">Favor enviar os preços das rotas do dia. O sistema fará a comparação automática com piso ANTT, benchmark, custo interno e preço-alvo.</textarea>
+                  </div>
+                </div>
+                <div class="small-btns">
+                  <button class="btn" id="btnSendQuotes">Disparar cotação</button>
+                  <button class="btn secondary" id="btnPreviewMail">Visualizar mensagem</button>
+                </div>
+                <div class="list" id="mailLog" style="margin-top:16px;"></div>
+              </div>
+            </div>
+
+            <div class="panel" id="subpanel-returns">
+              <div class="panel-body">
+                <div class="small-btns">
+                  <button class="btn secondary" id="btnSampleReturns">Carregar retornos de exemplo</button>
+                </div>
+                <div class="table-wrap" style="padding:16px 0 0;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Rota</th>
+                        <th>Km</th>
+                        <th>Veículo</th>
+                        <th>Transportadora</th>
+                        <th>Preço parceiro</th>
+                        <th>Piso ANTT</th>
+                        <th>Benchmark</th>
+                        <th>Custo interno</th>
+                        <th>Preço-alvo</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="returnsBody"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- PAINEL DASHBOARD (seu código original) -->
+        <!-- PAINEL DASHBOARD -->
         <section class="panel" id="panel-dashboard">
           <div class="dashboard-header">
             <h2 style="margin:0;">📊 Dashboard de Análise</h2>
@@ -883,14 +1015,71 @@
               <span>🧹</span> Limpar Dados dos Gráficos
             </button>
           </div>
-          <!-- ... resto do dashboard ... -->
+
+          <div class="charts">
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Cotado x preço-alvo por transportadora</h3><p>Base cadastrada</p></div>
+              <div class="list" id="carrierChart"></div>
+            </div>
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Desvio versus benchmark</h3><p>Em percentual por corredor</p></div>
+              <div class="list" id="corridorChart"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <div class="panel-head"><h3>Prioridades de negociação</h3><p>Rotas com maior oportunidade de saving</p></div>
+            <div class="panel-body"><div class="list" id="priorityList"></div></div>
+          </div>
+          <div class="stats-2" id="dashboardArea">
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Transportadora que mais atende</h3><p>Baseado nos retornos recebidos</p></div>
+              <div class="list-item" id="topPartnerBox">Nenhuma transportadora cadastrada.</div>
+            </div>
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Transportadora que menos atende</h3><p>Baseado na menor taxa de resposta</p></div>
+              <div class="list-item" id="lowPartnerBox">Nenhuma transportadora cadastrada.</div>
+            </div>
+          </div>
         </section>
 
-        <!-- PAINEL EMPRESA (seu código original) -->
+        <!-- PAINEL EMPRESA -->
         <section class="panel" id="panel-empresa">
-          <div class="empresa-card">
-            <h2>🏢 Minha Empresa</h2>
-            <!-- ... conteúdo da empresa ... -->
+          <div class="card">
+            <div class="panel-head">
+              <h2>🏢 Minha Empresa</h2>
+              <p>Gerencie os dados da sua empresa</p>
+            </div>
+            <div class="panel-body">
+              <div class="form-grid">
+                <div class="full">
+                  <label>Razão Social</label>
+                  <input type="text" id="empresaRazao" value="Transportadora Modelo LTDA" />
+                </div>
+                <div>
+                  <label>CNPJ</label>
+                  <input type="text" id="empresaCnpj" value="12.345.678/0001-90" />
+                </div>
+                <div>
+                  <label>Inscrição Estadual</label>
+                  <input type="text" id="empresaIE" value="123.456.789.012" />
+                </div>
+                <div>
+                  <label>Telefone</label>
+                  <input type="text" id="empresaTel" value="(11) 3456-7890" />
+                </div>
+                <div>
+                  <label>E-mail</label>
+                  <input type="email" id="empresaEmail" value="contato@transportadora.com" />
+                </div>
+                <div class="full">
+                  <label>Endereço</label>
+                  <input type="text" id="empresaEndereco" value="Av. Principal, 1000 - Centro, São Paulo/SP" />
+                </div>
+              </div>
+              <div class="small-btns">
+                <button class="btn" onclick="salvarEmpresa()">Salvar Alterações</button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1024,9 +1213,6 @@
                   <option value="analista">Analista</option>
                   <option value="operador">Operador</option>
                 </select>
-                <select id="filtroEmpresaUsuario">
-                  <option value="">Todas empresas</option>
-                </select>
               </div>
               
               <div class="table-wrap">
@@ -1071,20 +1257,6 @@
                         </div>
                       </td>
                     </tr>
-                    <tr>
-                      <td>Carlos Oliveira</td>
-                      <td>carlos@express.com</td>
-                      <td>Transportadora Express</td>
-                      <td><span class="badge pendente">Pendente</span></td>
-                      <td><span class="badge pendente">Pendente</span></td>
-                      <td>-</td>
-                      <td>
-                        <div class="action-buttons">
-                          <button class="btn-icon approve" title="Aprovar">✅</button>
-                          <button class="btn-icon reject" title="Rejeitar">❌</button>
-                        </div>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1105,7 +1277,6 @@
                       <th>Preço</th>
                       <th>Limite usuários</th>
                       <th>Limite rotas</th>
-                      <th>Recursos</th>
                       <th>Status</th>
                       <th>Ações</th>
                     </tr>
@@ -1116,7 +1287,6 @@
                       <td>R$ 0</td>
                       <td>3</td>
                       <td>100</td>
-                      <td>Básico</td>
                       <td><span class="badge ativo">Ativo</span></td>
                       <td>
                         <button class="btn-icon edit" title="Editar">✏️</button>
@@ -1127,7 +1297,6 @@
                       <td>R$ 299</td>
                       <td>10</td>
                       <td>1.000</td>
-                      <td>Avançado</td>
                       <td><span class="badge ativo">Ativo</span></td>
                       <td>
                         <button class="btn-icon edit" title="Editar">✏️</button>
@@ -1138,7 +1307,6 @@
                       <td>Sob consulta</td>
                       <td>Ilimitado</td>
                       <td>Ilimitado</td>
-                      <td>Completo</td>
                       <td><span class="badge ativo">Ativo</span></td>
                       <td>
                         <button class="btn-icon edit" title="Editar">✏️</button>
@@ -1160,7 +1328,6 @@
                   <option value="plano">Plano</option>
                   <option value="sistema">Sistema</option>
                 </select>
-                <input type="text" id="filtroUsuarioLog" placeholder="Buscar por usuário..." />
               </div>
               
               <div class="table-wrap">
@@ -1172,7 +1339,6 @@
                       <th>Empresa</th>
                       <th>Tipo</th>
                       <th>Ação</th>
-                      <th>Detalhes</th>
                       <th>IP</th>
                     </tr>
                   </thead>
@@ -1182,8 +1348,7 @@
                       <td>João Silva</td>
                       <td>Admin</td>
                       <td>Empresa</td>
-                      <td>Aprovou empresa</td>
-                      <td>Transportadora Express</td>
+                      <td>Aprovou Transportadora Express</td>
                       <td>192.168.1.100</td>
                     </tr>
                     <tr>
@@ -1191,8 +1356,7 @@
                       <td>Sistema</td>
                       <td>-</td>
                       <td>Usuário</td>
-                      <td>Novo cadastro</td>
-                      <td>Maria Santos</td>
+                      <td>Novo cadastro: Maria Santos</td>
                       <td>192.168.1.101</td>
                     </tr>
                   </tbody>
@@ -1202,9 +1366,8 @@
           </div>
         </section>
 
-        <!-- PAINEL PARÂMETROS (seu código original) -->
+        <!-- PAINEL PARÂMETROS -->
         <section class="panel" id="panel-parametros">
-          <!-- ... conteúdo dos parâmetros ... -->
           <div class="stats-2">
             <div class="card">
               <div class="panel-head"><h2>Parâmetros do motor</h2><p>Regras editáveis para precificação</p></div>
@@ -1386,6 +1549,11 @@
     // Funções para planos
     window.novoPlano = function() {
       alert('Funcionalidade: Criar novo plano');
+    };
+
+    // Função empresa
+    window.salvarEmpresa = function() {
+      alert('✅ Dados da empresa salvos!');
     };
 
     // 🔒 PROTEÇÃO ADICIONAL
