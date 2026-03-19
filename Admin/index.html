@@ -529,6 +529,7 @@
 
           <div class="actions">
             <button type="submit" class="btn btn-primary">Criar empresa e começar</button>
+            <!-- 🔥 BOTÃO CORRIGIDO -->
             <button type="button" class="btn btn-secondary" onclick="window.location.href='index.html'">Já tenho conta</button>
           </div>
 
@@ -711,7 +712,7 @@
           criado_em: Date.now()
         });
 
-        // ✅ SUCESSO - CORRIGIDO!
+        // ✅ SUCESSO
         msg.className = "msg success";
         msg.innerHTML = `
           <strong>✅ Cadastro realizado com sucesso!</strong><br><br>
@@ -721,7 +722,7 @@
           <span style="font-size:12px;">Você será redirecionado em 3 segundos...</span>
         `;
 
-        // 🔥 CORREÇÃO: Redirecionar para index.html na mesma pasta
+        // Redirecionar para index.html
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 3000);
