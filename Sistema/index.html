@@ -23,56 +23,8 @@
       --info: #1d4ed8;
       --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
       --radius: 18px;
-      /* 🔝 MENU TOPO */
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--primary);
-  padding: 15px 25px;
-  color: white;
-}
-
-.menu {
-  display: flex;
-  gap: 10px;
-}
-
-.menu button {
-  background: transparent;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.menu button:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.menu .ativo {
-  background: var(--primary-2);
-}
-
-.logout {
-  background: var(--danger);
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* 📦 ABAS */
-.aba-conteudo {
-  padding: 20px;
-}
-
-.escondido {
-  display: none;
-}
     }
+    
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -80,11 +32,133 @@
       background: var(--bg);
       color: var(--text);
     }
-    .container {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 24px;
+
+    /* LAYOUT */
+    .layout {
+      display: flex;
+      min-height: 100vh;
     }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 250px;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+      width: 70px;
+    }
+
+    .sidebar .logo {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .sidebar button:hover {
+      background: #1e293b;
+    }
+
+    .sidebar button.ativo {
+      background: var(--primary);
+      color: white;
+    }
+
+    .sidebar.collapsed span {
+      display: none;
+    }
+
+    .sidebar .logout {
+      margin-top: auto;
+      background: #b91c1c !important;
+      color: white !important;
+    }
+
+    .sidebar .logout:hover {
+      background: #991b1b !important;
+    }
+
+    /* TOP HEADER */
+    .top-header {
+      background: white;
+      padding: 15px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .top-header .toggle {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text);
+      padding: 5px 10px;
+    }
+
+    .top-header .toggle:hover {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+
+    .top-header h3 {
+      margin: 0;
+      color: var(--muted);
+      font-weight: normal;
+    }
+
+    /* CONTEÚDO PRINCIPAL */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    /* PANELS */
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    /* SEU CSS ORIGINAL (MANTIDO) */
     .hero {
       display: flex;
       justify-content: space-between;
@@ -437,518 +511,567 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="hero">
-      <div>
-        <div class="tag">🚚 Frete Inteligente 2.0</div>
-        <h1>Plataforma de precificação de frete dedicado</h1>
-        <div class="subtitle">Sistema com controle por empresa, perfil e base de rotas integrada ao Firebase.</div>
-      </div>
-      <div class="actions">
-        <button class="btn secondary" id="btnInfo">Como usar</button>
-        <button class="btn" id="btnAddBase">Adicionar simulação à base</button>
-        <button onclick="sair()">Sair</button>
-      </div>
-    </div>
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">🚚 <span>Frete Inteligente</span></div>
 
-    <div class="metrics">
-      <div class="card metric">
-        <div class="metric-label">Conformidade ANTT</div>
-        <div class="metric-value" id="metricConformidade">0%</div>
-        <div class="metric-sub">rotas acima do piso</div>
-      </div>
-      <div class="card metric">
-        <div class="metric-label">Saving potencial</div>
-        <div class="metric-value" id="metricSaving">R$ 0,00</div>
-        <div class="metric-sub">sobre a base cadastrada</div>
-      </div>
-      <div class="card metric" id="cardMercado">
-        <div class="metric-label">Cotações acima do mercado</div>
-        <div class="metric-value" id="metricMercado">0</div>
-        <div class="metric-sub">rotas em alerta</div>
-      </div>
-      <div class="card metric">
-        <div class="metric-label">Média cotada</div>
-        <div class="metric-value" id="metricMedia">R$ 0,00/km</div>
-        <div class="metric-sub">na carteira atual</div>
-      </div>
-    </div>
+      <nav>
+        <button onclick="irPara('simulador', event)" class="ativo" id="menu-simulador">
+          📊 <span>Simulador</span>
+        </button>
+        <button onclick="irPara('rotas', event)" id="menu-rotas">
+          🛣️ <span>Base de Rotas</span>
+        </button>
+        <button onclick="irPara('cotacao', event)" id="menu-cotacao">
+          📨 <span>Cotação do Dia</span>
+        </button>
+        <button onclick="irPara('dashboard', event)" id="menu-dashboard">
+          📈 <span>Dashboard</span>
+        </button>
+        <button onclick="irPara('parametros', event)" id="menu-parametros">
+          ⚙️ <span>Parâmetros</span>
+        </button>
+      </nav>
 
-    <div class="tabs" id="mainTabs">
-      <button class="tab-btn active" data-target="simulador">Simulador</button>
-      <button class="tab-btn" data-target="rotas" id="tabRotas">Base de Rotas</button>
-      <button class="tab-btn" data-target="cotacao" id="tabCotacao">Cotação do Dia</button>
-      <button class="tab-btn" data-target="dashboard" id="tabDashboard">Dashboard</button>
-      <button class="tab-btn" data-target="parametros" id="tabParametros">Parâmetros</button>
-    </div>
+      <button class="logout" onclick="sair()">
+        🚪 <span>Sair</span>
+      </button>
+    </aside>
 
-    <section class="panel active" id="panel-simulador">
-      <div class="grid-2-3">
-        <div class="card">
-          <div class="panel-head">
-            <h2>Nova simulação</h2>
-            <p>Informe a rota e os dados da operação</p>
-          </div>
-          <div class="panel-body">
-            <div class="form-grid">
-              <div class="full">
-                <label for="origin">Origem</label>
-                <input id="origin" value="Guarulhos/SP" />
-              </div>
-              <div class="full">
-                <label for="destination">Destino</label>
-                <input id="destination" value="Duque de Caxias/RJ" />
-              </div>
-              <div>
-                <label for="originUF">UF Origem</label>
-                <input id="originUF" value="SP" maxlength="2" />
-              </div>
-              <div>
-                <label for="destinationUF">UF Destino</label>
-                <input id="destinationUF" value="RJ" maxlength="2" />
-              </div>
-              <div>
-                <label for="km">Distância (km)</label>
-                <input id="km" type="number" value="430" />
-              </div>
-              <div>
-                <label for="vehicle">Veículo</label>
-                <select id="vehicle"></select>
-              </div>
-              <div>
-                <label for="quoted">Frete cotado (R$)</label>
-                <input id="quoted" type="number" value="6100" />
-              </div>
-              <div>
-                <label for="toll">Pedágio (R$)</label>
-                <input id="toll" type="number" value="320" />
-              </div>
-              <div>
-                <label for="waitingHours">Horas de espera</label>
-                <input id="waitingHours" type="number" value="2" />
-              </div>
-              <div>
-                <label for="carrier">Transportadora</label>
-                <input id="carrier" value="Transportadora Alpha" />
-              </div>
-            </div>
-            <div class="toggle-row">
-              <button type="button" class="toggle" id="btnUrgency">Urgência</button>
-              <button type="button" class="toggle" id="btnEmptyReturn">Retorno vazio</button>
-              <button type="button" class="toggle" id="btnExclusivity">Exclusivo</button>
-            </div>
-            <div class="small-btns">
-              <button class="btn secondary" id="btnRecalc">Atualizar cálculo</button>
-              <button class="btn" id="btnSaveRoute">Salvar na base</button>
-            </div>
-          </div>
-        </div>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="content">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <button class="toggle" onclick="toggleSidebar()">☰</button>
+        <h3 id="currentPageTitle">Simulador</h3>
+      </header>
 
-        <div class="card" id="simulacao">
-          <div class="panel-head" style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+      <div class="container">
+        <!-- PAINÉIS ORIGINAIS (COMPLETOS) -->
+        <section class="panel active" id="panel-simulador">
+          <div class="hero">
             <div>
-              <h2>Resultado da precificação</h2>
-              <p id="resultRoute">Guarulhos/SP → Duque de Caxias/RJ</p>
+              <div class="tag">🚚 Frete Inteligente 2.0</div>
+              <h1>Plataforma de precificação de frete dedicado</h1>
+              <div class="subtitle">Sistema com controle por empresa, perfil e base de rotas integrada ao Firebase.</div>
             </div>
-            <span class="pill ok" id="statusBadge">Conforme</span>
-          </div>
-          <div class="result-top">
-            <div class="mini">
-              <div class="mini-title">Piso ANTT</div>
-              <div class="mini-value" id="anttTrip">R$ 0,00</div>
-              <div class="mini-sub" id="anttRate">R$ 0,00/km simplificado</div>
-            </div>
-            <div class="mini">
-              <div class="mini-title">Benchmark mediano</div>
-              <div class="mini-value" id="idealMedian">R$ 0,00</div>
-              <div class="mini-sub" id="benchRate">R$ 0,00/km</div>
-            </div>
-            <div class="mini">
-              <div class="mini-title">Custo interno</div>
-              <div class="mini-value" id="internalCost">R$ 0,00</div>
-              <div class="mini-sub" id="targetPerKm">R$ 0,00/km alvo</div>
-            </div>
-            <div class="mini">
-              <div class="mini-title">Preço-alvo</div>
-              <div class="mini-value" id="targetPrice">R$ 0,00</div>
-              <div class="mini-sub" id="savingPotential">Saving potencial R$ 0,00</div>
+            <div class="actions">
+              <button class="btn secondary" id="btnInfo">Como usar</button>
+              <button class="btn" id="btnAddBase">Adicionar simulação à base</button>
             </div>
           </div>
-          <div class="split">
-            <div class="box">
-              <h3>Faixa ideal de negociação</h3>
-              <div class="muted">Baseada em ANTT, custo e benchmark</div>
-              <div class="kv"><span>Faixa sugerida</span><strong id="rangeSuggested">R$ 0,00 a R$ 0,00</strong></div>
-              <div class="progress"><div class="progress-bar" id="rangeBar"></div></div>
-              <div style="margin-top: 14px;">
-                <div class="kv"><span>Cotação recebida</span><strong id="quotedDisplay">R$ 0,00</strong></div>
-                <div class="kv"><span>Desvio vs mercado</span><strong id="deviationMarket">0,0%</strong></div>
-                <div class="kv"><span>Desvio vs ANTT</span><strong id="deviationAntt">0,0%</strong></div>
-                <div class="kv"><span>R$/km cotado</span><strong id="quotedPerKm">R$ 0,00</strong></div>
+
+          <div class="metrics">
+            <div class="card metric">
+              <div class="metric-label">Conformidade ANTT</div>
+              <div class="metric-value" id="metricConformidade">0%</div>
+              <div class="metric-sub">rotas acima do piso</div>
+            </div>
+            <div class="card metric">
+              <div class="metric-label">Saving potencial</div>
+              <div class="metric-value" id="metricSaving">R$ 0,00</div>
+              <div class="metric-sub">sobre a base cadastrada</div>
+            </div>
+            <div class="card metric" id="cardMercado">
+              <div class="metric-label">Cotações acima do mercado</div>
+              <div class="metric-value" id="metricMercado">0</div>
+              <div class="metric-sub">rotas em alerta</div>
+            </div>
+            <div class="card metric">
+              <div class="metric-label">Média cotada</div>
+              <div class="metric-value" id="metricMedia">R$ 0,00/km</div>
+              <div class="metric-sub">na carteira atual</div>
+            </div>
+          </div>
+
+          <div class="grid-2-3">
+            <div class="card">
+              <div class="panel-head">
+                <h2>Nova simulação</h2>
+                <p>Informe a rota e os dados da operação</p>
               </div>
-            </div>
-            <div class="box">
-              <h3>Memória de cálculo</h3>
-              <div class="muted">Componentes do preço-alvo</div>
-              <div class="kv"><span>Custo base operacional</span><strong id="memoryBase">R$ 0,00</strong></div>
-              <div class="kv"><span>Custo tabela UF</span><strong id="memoryUF">Não cadastrado</strong></div>
-              <div class="kv"><span>Pedágio</span><strong id="memoryToll">R$ 0,00</strong></div>
-              <div class="kv"><span>Espera</span><strong id="memoryWaiting">R$ 0,00</strong></div>
-              <div class="kv"><span>Urgência</span><strong id="memoryUrgency">R$ 0,00</strong></div>
-              <div class="kv"><span>Retorno vazio</span><strong id="memoryEmpty">R$ 0,00</strong></div>
-              <div class="kv"><span>Exclusividade</span><strong id="memoryExclusive">R$ 0,00</strong></div>
-              <div class="kv"><span>Risco operacional</span><strong id="memoryRisk">R$ 0,00</strong></div>
-              <div class="kv"><span>Custo administrativo</span><strong id="memoryAdmin">R$ 0,00</strong></div>
-              <div class="kv"><span><strong>Preço-alvo final</strong></span><strong id="memoryTarget">R$ 0,00</strong></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-rotas">
-      <div class="card">
-        <div class="toolbar">
-          <div>
-            <h2 style="margin:0;">Base de rotas e cotações</h2>
-            <div class="muted" style="margin-top:8px;">Comparação de mercado, ANTT, custo interno e preço-alvo por rota</div>
-          </div>
-          <input id="routeSearch" placeholder="Buscar rota, origem, destino ou transportadora" />
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Corredor</th>
-                <th>Transportadora</th>
-                <th>Km</th>
-                <th>Cotado</th>
-                <th>Piso ANTT</th>
-                <th>Benchmark</th>
-                <th>Custo interno</th>
-                <th>Preço-alvo</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="routesTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-cotacao">
-      <div class="card">
-        <div class="panel-head">
-          <h2>Cotação do Dia</h2>
-          <p>Importe a tabela de custo, suba as rotas do dia, selecione transportadoras e consolide os retornos.</p>
-        </div>
-        <div class="subtabs" id="quoteTabs" style="padding: 0 20px 18px;">
-          <button class="subtab-btn active" data-target="imports">Importações</button>
-          <button class="subtab-btn" data-target="partners">Transportadoras</button>
-          <button class="subtab-btn" data-target="dispatch">Disparo</button>
-          <button class="subtab-btn" data-target="returns">Retornos</button>
-        </div>
-
-        <div class="panel active" id="subpanel-imports">
-          <div class="panel-body">
-            <div class="stats-2">
-              <div class="card" style="box-shadow:none;">
-                <div class="panel-head" style="padding:20px 20px 0;">
-                  <h3>Importar tabela de custo</h3>
-                  <p>CSV com colunas: UF, TIPO_VEICULO, VALOR_KM</p>
-                </div>
-                <div class="panel-body">
-                  <input type="file" id="costFile" accept=".csv" />
-                  <div class="small-btns">
-                    <button class="btn" id="btnImportCost">Importar tabela de custo</button>
-                    <button class="btn secondary" id="btnSampleCost">Carregar exemplo</button>
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div class="full">
+                    <label for="origin">Origem</label>
+                    <input id="origin" value="Guarulhos/SP" />
+                  </div>
+                  <div class="full">
+                    <label for="destination">Destino</label>
+                    <input id="destination" value="Duque de Caxias/RJ" />
+                  </div>
+                  <div>
+                    <label for="originUF">UF Origem</label>
+                    <input id="originUF" value="SP" maxlength="2" />
+                  </div>
+                  <div>
+                    <label for="destinationUF">UF Destino</label>
+                    <input id="destinationUF" value="RJ" maxlength="2" />
+                  </div>
+                  <div>
+                    <label for="km">Distância (km)</label>
+                    <input id="km" type="number" value="430" />
+                  </div>
+                  <div>
+                    <label for="vehicle">Veículo</label>
+                    <select id="vehicle"></select>
+                  </div>
+                  <div>
+                    <label for="quoted">Frete cotado (R$)</label>
+                    <input id="quoted" type="number" value="6100" />
+                  </div>
+                  <div>
+                    <label for="toll">Pedágio (R$)</label>
+                    <input id="toll" type="number" value="320" />
+                  </div>
+                  <div>
+                    <label for="waitingHours">Horas de espera</label>
+                    <input id="waitingHours" type="number" value="2" />
+                  </div>
+                  <div>
+                    <label for="carrier">Transportadora</label>
+                    <input id="carrier" value="Transportadora Alpha" />
                   </div>
                 </div>
-              </div>
-              <div class="card" style="box-shadow:none;">
-                <div class="panel-head" style="padding:20px 20px 0;">
-                  <h3>Importar rotas do dia</h3>
-                  <p>CSV com colunas: ORIGEM, DESTINO, UF_ORIGEM, UF_DESTINO, KM, TIPO_VEICULO</p>
+                <div class="toggle-row">
+                  <button type="button" class="toggle" id="btnUrgency">Urgência</button>
+                  <button type="button" class="toggle" id="btnEmptyReturn">Retorno vazio</button>
+                  <button type="button" class="toggle" id="btnExclusivity">Exclusivo</button>
                 </div>
-                <div class="panel-body">
-                  <input type="file" id="dailyRoutesFile" accept=".csv" />
-                  <div class="small-btns">
-                    <button class="btn" id="btnImportRoutes">Importar rotas do dia</button>
-                    <button class="btn secondary" id="btnSampleRoutes">Carregar exemplo</button>
-                  </div>
+                <div class="small-btns">
+                  <button class="btn secondary" id="btnRecalc">Atualizar cálculo</button>
+                  <button class="btn" id="btnSaveRoute">Salvar na base</button>
                 </div>
               </div>
             </div>
-            <div class="alert" id="importAlert"></div>
-            <div class="stats-2" style="margin-top:16px;">
-              <div class="card" style="box-shadow:none;">
-                <div class="panel-head"><h3>Tabela de custo carregada</h3><p id="costSummary">Nenhuma tabela importada.</p></div>
-                <div class="table-wrap">
-                  <table>
-                    <thead><tr><th>UF</th><th>Tipo veículo</th><th>Valor/km</th></tr></thead>
-                    <tbody id="costTableBody"></tbody>
-                  </table>
+
+            <div class="card" id="simulacao">
+              <div class="panel-head" style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+                <div>
+                  <h2>Resultado da precificação</h2>
+                  <p id="resultRoute">Guarulhos/SP → Duque de Caxias/RJ</p>
+                </div>
+                <span class="pill ok" id="statusBadge">Conforme</span>
+              </div>
+              <div class="result-top">
+                <div class="mini">
+                  <div class="mini-title">Piso ANTT</div>
+                  <div class="mini-value" id="anttTrip">R$ 0,00</div>
+                  <div class="mini-sub" id="anttRate">R$ 0,00/km simplificado</div>
+                </div>
+                <div class="mini">
+                  <div class="mini-title">Benchmark mediano</div>
+                  <div class="mini-value" id="idealMedian">R$ 0,00</div>
+                  <div class="mini-sub" id="benchRate">R$ 0,00/km</div>
+                </div>
+                <div class="mini">
+                  <div class="mini-title">Custo interno</div>
+                  <div class="mini-value" id="internalCost">R$ 0,00</div>
+                  <div class="mini-sub" id="targetPerKm">R$ 0,00/km alvo</div>
+                </div>
+                <div class="mini">
+                  <div class="mini-title">Preço-alvo</div>
+                  <div class="mini-value" id="targetPrice">R$ 0,00</div>
+                  <div class="mini-sub" id="savingPotential">Saving potencial R$ 0,00</div>
                 </div>
               </div>
-              <div class="card" style="box-shadow:none;">
-                <div class="panel-head"><h3>Rotas do dia</h3><p id="dailySummary">Nenhuma rota importada.</p></div>
-                <div class="table-wrap">
-                  <table>
-                    <thead><tr><th>Origem</th><th>Destino</th><th>UF</th><th>Km</th><th>Veículo</th></tr></thead>
-                    <tbody id="dailyRoutesBody"></tbody>
-                  </table>
+              <div class="split">
+                <div class="box">
+                  <h3>Faixa ideal de negociação</h3>
+                  <div class="muted">Baseada em ANTT, custo e benchmark</div>
+                  <div class="kv"><span>Faixa sugerida</span><strong id="rangeSuggested">R$ 0,00 a R$ 0,00</strong></div>
+                  <div class="progress"><div class="progress-bar" id="rangeBar"></div></div>
+                  <div style="margin-top: 14px;">
+                    <div class="kv"><span>Cotação recebida</span><strong id="quotedDisplay">R$ 0,00</strong></div>
+                    <div class="kv"><span>Desvio vs mercado</span><strong id="deviationMarket">0,0%</strong></div>
+                    <div class="kv"><span>Desvio vs ANTT</span><strong id="deviationAntt">0,0%</strong></div>
+                    <div class="kv"><span>R$/km cotado</span><strong id="quotedPerKm">R$ 0,00</strong></div>
+                  </div>
+                </div>
+                <div class="box">
+                  <h3>Memória de cálculo</h3>
+                  <div class="muted">Componentes do preço-alvo</div>
+                  <div class="kv"><span>Custo base operacional</span><strong id="memoryBase">R$ 0,00</strong></div>
+                  <div class="kv"><span>Custo tabela UF</span><strong id="memoryUF">Não cadastrado</strong></div>
+                  <div class="kv"><span>Pedágio</span><strong id="memoryToll">R$ 0,00</strong></div>
+                  <div class="kv"><span>Espera</span><strong id="memoryWaiting">R$ 0,00</strong></div>
+                  <div class="kv"><span>Urgência</span><strong id="memoryUrgency">R$ 0,00</strong></div>
+                  <div class="kv"><span>Retorno vazio</span><strong id="memoryEmpty">R$ 0,00</strong></div>
+                  <div class="kv"><span>Exclusividade</span><strong id="memoryExclusive">R$ 0,00</strong></div>
+                  <div class="kv"><span>Risco operacional</span><strong id="memoryRisk">R$ 0,00</strong></div>
+                  <div class="kv"><span>Custo administrativo</span><strong id="memoryAdmin">R$ 0,00</strong></div>
+                  <div class="kv"><span><strong>Preço-alvo final</strong></span><strong id="memoryTarget">R$ 0,00</strong></div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="panel" id="subpanel-partners">
-          <div class="panel-body">
-            <div class="form-grid">
+        <section class="panel" id="panel-rotas">
+          <div class="card">
+            <div class="toolbar">
               <div>
-                <label for="partnerName">Nome da transportadora</label>
-                <input id="partnerName" placeholder="Ex.: Transportadora Alpha" />
+                <h2 style="margin:0;">Base de rotas e cotações</h2>
+                <div class="muted" style="margin-top:8px;">Comparação de mercado, ANTT, custo interno e preço-alvo por rota</div>
               </div>
-              <div>
-                <label for="partnerEmail">E-mail</label>
-                <input id="partnerEmail" placeholder="contato@transportadora.com" />
-              </div>
+              <input id="routeSearch" placeholder="Buscar rota, origem, destino ou transportadora" />
             </div>
-            <div class="small-btns">
-              <button class="btn" id="btnAddPartner">Adicionar transportadora</button>
-              <button class="btn secondary" id="btnSamplePartners">Carregar exemplos</button>
-            </div>
-            <div class="table-wrap" style="padding:20px 0 0;">
+            <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>Selecionar</th>
+                    <th>Corredor</th>
                     <th>Transportadora</th>
-                    <th>E-mail</th>
-                    <th>Convites</th>
-                    <th>Respostas</th>
-                    <th>Taxa atendimento</th>
-                  </tr>
-                </thead>
-                <tbody id="partnersBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" id="subpanel-dispatch">
-          <div class="panel-body">
-            <div class="form-grid">
-              <div>
-                <label for="mailSubject">Assunto do e-mail</label>
-                <input id="mailSubject" value="Solicitação de Cotação de Frete - Rotas do Dia" />
-              </div>
-              <div>
-                <label for="mailDeadline">Prazo para resposta</label>
-                <input id="mailDeadline" value="Hoje até 17:00" />
-              </div>
-              <div class="full">
-                <label for="mailMessage">Mensagem padrão</label>
-                <textarea id="mailMessage">Favor enviar os preços das rotas do dia. O sistema fará a comparação automática com piso ANTT, benchmark, custo interno e preço-alvo.</textarea>
-              </div>
-            </div>
-            <div class="small-btns">
-              <button class="btn" id="btnSendQuotes">Disparar cotação</button>
-              <button class="btn secondary" id="btnPreviewMail">Visualizar mensagem</button>
-            </div>
-            <div class="list" id="mailLog" style="margin-top:16px;"></div>
-          </div>
-        </div>
-
-        <div class="panel" id="subpanel-returns">
-          <div class="panel-body">
-            <div class="small-btns">
-              <button class="btn secondary" id="btnSampleReturns">Carregar retornos de exemplo</button>
-            </div>
-            <div class="table-wrap" style="padding:16px 0 0;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Rota</th>
                     <th>Km</th>
-                    <th>Veículo</th>
-                    <th>Transportadora</th>
-                    <th>Preço parceiro</th>
+                    <th>Cotado</th>
                     <th>Piso ANTT</th>
                     <th>Benchmark</th>
                     <th>Custo interno</th>
                     <th>Preço-alvo</th>
                     <th>Status</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
-                <tbody id="returnsBody"></tbody>
+                <tbody id="routesTableBody"></tbody>
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <section class="panel" id="panel-dashboard">
-      <div class="dashboard-header">
-        <h2 style="margin:0;">📊 Dashboard de Análise</h2>
-        <button class="btn-limpar-dashboard" onclick="window.limparDadosDashboard()">
-          <span>🧹</span> Limpar Dados dos Gráficos
-        </button>
-      </div>
-
-      <div class="charts">
-        <div class="card panel-body">
-          <div class="panel-head" style="padding:0 0 10px;"><h3>Cotado x preço-alvo por transportadora</h3><p>Base cadastrada</p></div>
-          <div class="list" id="carrierChart"></div>
-        </div>
-        <div class="card panel-body">
-          <div class="panel-head" style="padding:0 0 10px;"><h3>Desvio versus benchmark</h3><p>Em percentual por corredor</p></div>
-          <div class="list" id="corridorChart"></div>
-        </div>
-      </div>
-      <div class="card" style="margin-top:16px;">
-        <div class="panel-head"><h3>Prioridades de negociação</h3><p>Rotas com maior oportunidade de saving</p></div>
-        <div class="panel-body"><div class="list" id="priorityList"></div></div>
-      </div>
-      <div class="stats-2" id="dashboardArea">
-        <div class="card panel-body">
-          <div class="panel-head" style="padding:0 0 10px;"><h3>Transportadora que mais atende</h3><p>Baseado nos retornos recebidos</p></div>
-          <div class="list-item" id="topPartnerBox">Nenhuma transportadora cadastrada.</div>
-        </div>
-        <div class="card panel-body">
-          <div class="panel-head" style="padding:0 0 10px;"><h3>Transportadora que menos atende</h3><p>Baseado na menor taxa de resposta</p></div>
-          <div class="list-item" id="lowPartnerBox">Nenhuma transportadora cadastrada.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-parametros">
-      <div class="stats-2">
-        <div class="card">
-          <div class="panel-head"><h2>Parâmetros do motor</h2><p>Regras editáveis para precificação</p></div>
-          <div class="panel-body">
-            <div class="form-grid">
-              <div><label>Carga/descarga</label><input id="param_loadUnloadFee" type="number" value="320" /></div>
-              <div><label>Hora de espera</label><input id="param_waitingHourCost" type="number" value="90" /></div>
-              <div><label>Urgência (%)</label><input id="param_urgencyPct" type="number" step="0.01" value="0.12" /></div>
-              <div><label>Retorno vazio (%)</label><input id="param_emptyReturnPct" type="number" step="0.01" value="0.18" /></div>
-              <div><label>Exclusividade (%)</label><input id="param_exclusivityPct" type="number" step="0.01" value="0.10" /></div>
-              <div><label>Risco operacional (%)</label><input id="param_operationalRiskPct" type="number" step="0.01" value="0.05" /></div>
-              <div><label>Margem (%)</label><input id="param_marginPct" type="number" step="0.01" value="0.12" /></div>
-              <div><label>Custo administrativo</label><input id="param_adminCost" type="number" value="150" /></div>
+        <section class="panel" id="panel-cotacao">
+          <div class="card">
+            <div class="panel-head">
+              <h2>Cotação do Dia</h2>
+              <p>Importe a tabela de custo, suba as rotas do dia, selecione transportadoras e consolide os retornos.</p>
             </div>
-            <div style="margin-top:20px;font-weight:700;">Coeficientes ANTT simplificados por veículo</div>
-            <div class="form-grid" id="anttRatesGrid" style="margin-top:12px;"></div>
-            <div class="small-btns"><button class="btn" id="btnSaveParams">Aplicar parâmetros</button></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="panel-head"><h2>Benchmark por faixa de km</h2><p>Edite pisos, medianas e tetos do mercado</p></div>
-          <div class="panel-body">
-            <div class="table-wrap" style="padding:0;">
-              <table>
-                <thead><tr><th>Faixa km</th><th>Mín</th><th>Mediana</th><th>Máx</th></tr></thead>
-                <tbody id="benchTableBody"></tbody>
-              </table>
+            <div class="subtabs" id="quoteTabs" style="padding: 0 20px 18px;">
+              <button class="subtab-btn active" data-target="imports">Importações</button>
+              <button class="subtab-btn" data-target="partners">Transportadoras</button>
+              <button class="subtab-btn" data-target="dispatch">Disparo</button>
+              <button class="subtab-btn" data-target="returns">Retornos</button>
             </div>
-            <div class="small-btns"><button class="btn" id="btnSaveBench">Aplicar benchmark</button></div>
+
+            <div class="panel active" id="subpanel-imports">
+              <div class="panel-body">
+                <div class="stats-2">
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head" style="padding:20px 20px 0;">
+                      <h3>Importar tabela de custo</h3>
+                      <p>CSV com colunas: UF, TIPO_VEICULO, VALOR_KM</p>
+                    </div>
+                    <div class="panel-body">
+                      <input type="file" id="costFile" accept=".csv" />
+                      <div class="small-btns">
+                        <button class="btn" id="btnImportCost">Importar tabela de custo</button>
+                        <button class="btn secondary" id="btnSampleCost">Carregar exemplo</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head" style="padding:20px 20px 0;">
+                      <h3>Importar rotas do dia</h3>
+                      <p>CSV com colunas: ORIGEM, DESTINO, UF_ORIGEM, UF_DESTINO, KM, TIPO_VEICULO</p>
+                    </div>
+                    <div class="panel-body">
+                      <input type="file" id="dailyRoutesFile" accept=".csv" />
+                      <div class="small-btns">
+                        <button class="btn" id="btnImportRoutes">Importar rotas do dia</button>
+                        <button class="btn secondary" id="btnSampleRoutes">Carregar exemplo</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="alert" id="importAlert"></div>
+                <div class="stats-2" style="margin-top:16px;">
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head"><h3>Tabela de custo carregada</h3><p id="costSummary">Nenhuma tabela importada.</p></div>
+                    <div class="table-wrap">
+                      <table>
+                        <thead><tr><th>UF</th><th>Tipo veículo</th><th>Valor/km</th></tr></thead>
+                        <tbody id="costTableBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card" style="box-shadow:none;">
+                    <div class="panel-head"><h3>Rotas do dia</h3><p id="dailySummary">Nenhuma rota importada.</p></div>
+                    <div class="table-wrap">
+                      <table>
+                        <thead><tr><th>Origem</th><th>Destino</th><th>UF</th><th>Km</th><th>Veículo</th></tr></thead>
+                        <tbody id="dailyRoutesBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="subpanel-partners">
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div>
+                    <label for="partnerName">Nome da transportadora</label>
+                    <input id="partnerName" placeholder="Ex.: Transportadora Alpha" />
+                  </div>
+                  <div>
+                    <label for="partnerEmail">E-mail</label>
+                    <input id="partnerEmail" placeholder="contato@transportadora.com" />
+                  </div>
+                </div>
+                <div class="small-btns">
+                  <button class="btn" id="btnAddPartner">Adicionar transportadora</button>
+                  <button class="btn secondary" id="btnSamplePartners">Carregar exemplos</button>
+                </div>
+                <div class="table-wrap" style="padding:20px 0 0;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Selecionar</th>
+                        <th>Transportadora</th>
+                        <th>E-mail</th>
+                        <th>Convites</th>
+                        <th>Respostas</th>
+                        <th>Taxa atendimento</th>
+                      </tr>
+                    </thead>
+                    <tbody id="partnersBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="subpanel-dispatch">
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div>
+                    <label for="mailSubject">Assunto do e-mail</label>
+                    <input id="mailSubject" value="Solicitação de Cotação de Frete - Rotas do Dia" />
+                  </div>
+                  <div>
+                    <label for="mailDeadline">Prazo para resposta</label>
+                    <input id="mailDeadline" value="Hoje até 17:00" />
+                  </div>
+                  <div class="full">
+                    <label for="mailMessage">Mensagem padrão</label>
+                    <textarea id="mailMessage">Favor enviar os preços das rotas do dia. O sistema fará a comparação automática com piso ANTT, benchmark, custo interno e preço-alvo.</textarea>
+                  </div>
+                </div>
+                <div class="small-btns">
+                  <button class="btn" id="btnSendQuotes">Disparar cotação</button>
+                  <button class="btn secondary" id="btnPreviewMail">Visualizar mensagem</button>
+                </div>
+                <div class="list" id="mailLog" style="margin-top:16px;"></div>
+              </div>
+            </div>
+
+            <div class="panel" id="subpanel-returns">
+              <div class="panel-body">
+                <div class="small-btns">
+                  <button class="btn secondary" id="btnSampleReturns">Carregar retornos de exemplo</button>
+                </div>
+                <div class="table-wrap" style="padding:16px 0 0;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Rota</th>
+                        <th>Km</th>
+                        <th>Veículo</th>
+                        <th>Transportadora</th>
+                        <th>Preço parceiro</th>
+                        <th>Piso ANTT</th>
+                        <th>Benchmark</th>
+                        <th>Custo interno</th>
+                        <th>Preço-alvo</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="returnsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section class="panel" id="panel-dashboard">
+          <div class="dashboard-header">
+            <h2 style="margin:0;">📊 Dashboard de Análise</h2>
+            <button class="btn-limpar-dashboard" onclick="window.limparDadosDashboard()">
+              <span>🧹</span> Limpar Dados dos Gráficos
+            </button>
+          </div>
+
+          <div class="charts">
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Cotado x preço-alvo por transportadora</h3><p>Base cadastrada</p></div>
+              <div class="list" id="carrierChart"></div>
+            </div>
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Desvio versus benchmark</h3><p>Em percentual por corredor</p></div>
+              <div class="list" id="corridorChart"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <div class="panel-head"><h3>Prioridades de negociação</h3><p>Rotas com maior oportunidade de saving</p></div>
+            <div class="panel-body"><div class="list" id="priorityList"></div></div>
+          </div>
+          <div class="stats-2" id="dashboardArea">
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Transportadora que mais atende</h3><p>Baseado nos retornos recebidos</p></div>
+              <div class="list-item" id="topPartnerBox">Nenhuma transportadora cadastrada.</div>
+            </div>
+            <div class="card panel-body">
+              <div class="panel-head" style="padding:0 0 10px;"><h3>Transportadora que menos atende</h3><p>Baseado na menor taxa de resposta</p></div>
+              <div class="list-item" id="lowPartnerBox">Nenhuma transportadora cadastrada.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="panel-parametros">
+          <div class="stats-2">
+            <div class="card">
+              <div class="panel-head"><h2>Parâmetros do motor</h2><p>Regras editáveis para precificação</p></div>
+              <div class="panel-body">
+                <div class="form-grid">
+                  <div><label>Carga/descarga</label><input id="param_loadUnloadFee" type="number" value="320" /></div>
+                  <div><label>Hora de espera</label><input id="param_waitingHourCost" type="number" value="90" /></div>
+                  <div><label>Urgência (%)</label><input id="param_urgencyPct" type="number" step="0.01" value="0.12" /></div>
+                  <div><label>Retorno vazio (%)</label><input id="param_emptyReturnPct" type="number" step="0.01" value="0.18" /></div>
+                  <div><label>Exclusividade (%)</label><input id="param_exclusivityPct" type="number" step="0.01" value="0.10" /></div>
+                  <div><label>Risco operacional (%)</label><input id="param_operationalRiskPct" type="number" step="0.01" value="0.05" /></div>
+                  <div><label>Margem (%)</label><input id="param_marginPct" type="number" step="0.01" value="0.12" /></div>
+                  <div><label>Custo administrativo</label><input id="param_adminCost" type="number" value="150" /></div>
+                </div>
+                <div style="margin-top:20px;font-weight:700;">Coeficientes ANTT simplificados por veículo</div>
+                <div class="form-grid" id="anttRatesGrid" style="margin-top:12px;"></div>
+                <div class="small-btns"><button class="btn" id="btnSaveParams">Aplicar parâmetros</button></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="panel-head"><h2>Benchmark por faixa de km</h2><p>Edite pisos, medianas e tetos do mercado</p></div>
+              <div class="panel-body">
+                <div class="table-wrap" style="padding:0;">
+                  <table>
+                    <thead><tr><th>Faixa km</th><th>Mín</th><th>Mediana</th><th>Máx</th></tr></thead>
+                    <tbody id="benchTableBody"></tbody>
+                  </table>
+                </div>
+                <div class="small-btns"><button class="btn" id="btnSaveBench">Aplicar benchmark</button></div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </main>
   </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-      <script>
-       const BASE = "/Frete-inteligente-"; // 👉 só UMA vez
+  <script>
+    const BASE = "/Frete-inteligente-";
 
-// 🔒 PROTEÇÃO (COLE AQUI 👇)
-if (!localStorage.getItem("usuario_id")) {
-  window.location.replace(BASE + "/Login/index.html");
-}
-        
-// 🔥 CONFIGURAÇÃO DO FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
-  authDomain: "rota-22c3b.firebaseapp.com",
-  databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com",
-  projectId: "rota-22c3b",
-  storageBucket: "rota-22c3b.appspot.com", // 👈 corrigido
-  messagingSenderId: "491665660350",
-  appId: "1:491665660350:web:fb79aa28f612d321c081ef",
-  measurementId: "G-8QBM2TCPY8"
-};
+    // 🔒 PROTEÇÃO
+    if (!localStorage.getItem("usuario_id")) {
+      window.location.replace(BASE + "/Login/index.html");
+    }
 
-// 🚪 LOGOUT
-window.sair = function() {
-  console.log("🚪 Logout funcionando");
+    // 🔥 CONFIGURAÇÃO DO FIREBASE
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
+      authDomain: "rota-22c3b.firebaseapp.com",
+      databaseURL: "https://rota-22c3b-default-rtdb.firebaseio.com",
+      projectId: "rota-22c3b",
+      storageBucket: "rota-22c3b.appspot.com",
+      messagingSenderId: "491665660350",
+      appId: "1:491665660350:web:fb79aa28f612d321c081ef",
+      measurementId: "G-8QBM2TCPY8"
+    };
 
-  localStorage.clear();
-
-  window.location.replace(BASE + "/Login/index.html");
-};
-    
     // Inicializar Firebase
     if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-  console.log("✅ Firebase inicializado:", firebaseConfig.projectId);
+      firebase.initializeApp(firebaseConfig);
     }
 
     const database = firebase.database();
 
     // ==============================================
-    // FUNÇÕES DE UTILIDADE E PROTEÇÃO
+    // FUNÇÕES DO MENU LATERAL
+    // ==============================================
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    function irPara(aba, e) {
+      // Atualiza botões da sidebar
+      document.querySelectorAll('.sidebar nav button').forEach(btn => {
+        btn.classList.remove('ativo');
+      });
+      
+      if (e) e.currentTarget.classList.add('ativo');
+
+      // Atualiza título
+      const titles = {
+        'simulador': 'Simulador',
+        'rotas': 'Base de Rotas',
+        'cotacao': 'Cotação do Dia',
+        'dashboard': 'Dashboard',
+        'parametros': 'Parâmetros'
+      };
+      document.getElementById('currentPageTitle').textContent = titles[aba] || 'Sistema';
+
+      // Mostra painel correspondente
+      document.querySelectorAll('.panel').forEach(p => {
+        p.classList.remove('active');
+      });
+      document.getElementById('panel-' + aba).classList.add('active');
+    }
+
+    // 🚪 LOGOUT
+    window.sair = function() {
+      console.log("🚪 Logout funcionando");
+      localStorage.clear();
+      window.location.replace(BASE + "/Login/index.html");
+    };
+
+    // 🔒 PROTEÇÃO ADICIONAL
+    (function protegerSistema() {
+      const usuarioId = localStorage.getItem("usuario_id");
+      const perfil = localStorage.getItem("perfil");
+      const empresaId = localStorage.getItem("empresa_id");
+
+      console.log("🔒 Verificando acesso:", { usuarioId, perfil, empresaId });
+
+      if (!usuarioId) {
+        alert("Sessão expirada - Faça login novamente");
+        window.location.href = BASE + "/Login/index.html";
+        return;
+      }
+
+      if (!perfil) {
+        alert("Perfil inválido");
+        window.location.href = BASE + "/Login/index.html";
+        return;
+      }
+
+      if (perfil !== "admin_plataforma" && !empresaId) {
+        alert("Empresa não identificada");
+        window.location.href = BASE + "/Login/index.html";
+        return;
+      }
+    })();
+
+    // 🔒 BLOQUEAR BOTÃO VOLTAR
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    // ==============================================
+    // SEU CÓDIGO ORIGINAL (COMPLETO)
     // ==============================================
 
-    function getEmpresaId() {
-      return localStorage.getItem("empresa_id");
-    }
-
-    function getPerfil() {
-      return localStorage.getItem("perfil");
-    }
-
-  // 🔒 PROTEÇÃO
-(function protegerSistema() {
-  const usuarioId = localStorage.getItem("usuario_id");
-  const perfil = getPerfil();
-  const empresaId = getEmpresaId();
-
-  console.log("🔒 Verificando acesso:", { usuarioId, perfil, empresaId });
-
-  if (!usuarioId) {
-    alert("Sessão expirada - Faça login novamente");
-    window.location.href = BASE + "/Login/index.html";
-    return;
-  }
-
-  if (!perfil) {
-    alert("Perfil inválido");
-    window.location.href = BASE + "/Login/index.html";
-    return;
-  }
-
-  if (perfil !== "admin_plataforma" && !empresaId) {
-    alert("Empresa não identificada");
-    window.location.href = BASE + "/Login/index.html";
-    return;
-  }
-
-})();
-        
-// 🔒 BLOQUEAR BOTÃO VOLTAR (COLE AQUI 👇)
-window.history.pushState(null, "", window.location.href);
-window.onpopstate = function () {
-  window.history.pushState(null, "", window.location.href);
-  
-  };
-        
     // Limpar dashboard
     window.limparDadosDashboard = function() {
       const carrierChart = document.getElementById('carrierChart');
@@ -1064,7 +1187,7 @@ window.onpopstate = function () {
       // ==============================================
 
       function aplicarPermissoes() {
-        const perfil = getPerfil();
+        const perfil = localStorage.getItem("perfil");
         console.log("👤 Aplicando permissões para:", perfil);
 
         if (perfil === "admin_plataforma") return;
@@ -1072,24 +1195,24 @@ window.onpopstate = function () {
         if (perfil === "admin_empresa") return;
 
         if (perfil === "analista") {
-          const tabParametros = document.getElementById("tabParametros");
-          if (tabParametros) tabParametros.style.display = "none";
+          const menuParametros = document.getElementById("menu-parametros");
+          if (menuParametros) menuParametros.style.display = "none";
         }
 
         if (perfil === "operador") {
-          const tabRotas = document.getElementById("tabRotas");
-          const tabCotacao = document.getElementById("tabCotacao");
-          const tabDashboard = document.getElementById("tabDashboard");
-          const tabParametros = document.getElementById("tabParametros");
+          const menuRotas = document.getElementById("menu-rotas");
+          const menuCotacao = document.getElementById("menu-cotacao");
+          const menuDashboard = document.getElementById("menu-dashboard");
+          const menuParametros = document.getElementById("menu-parametros");
           const cardMercado = document.getElementById("cardMercado");
 
-          if (tabRotas) tabRotas.style.display = "none";
-          if (tabCotacao) tabCotacao.style.display = "none";
-          if (tabDashboard) tabDashboard.style.display = "none";
-          if (tabParametros) tabParametros.style.display = "none";
+          if (menuRotas) menuRotas.style.display = "none";
+          if (menuCotacao) menuCotacao.style.display = "none";
+          if (menuDashboard) menuDashboard.style.display = "none";
+          if (menuParametros) menuParametros.style.display = "none";
           if (cardMercado) cardMercado.style.display = "none";
 
-          window.location.hash = "#simulacao";
+          irPara('simulador', null);
         }
       }
 
@@ -1410,7 +1533,7 @@ window.onpopstate = function () {
           veiculo,
           frete_cotado: Number(frete_cotado),
           transportadora,
-          empresa_id: getEmpresaId(),
+          empresa_id: localStorage.getItem("empresa_id"),
           timestamp: Date.now()
         };
 
@@ -1424,7 +1547,7 @@ window.onpopstate = function () {
       }
 
       async function carregarRotasDoBanco() {
-        const perfil = getPerfil();
+        const perfil = localStorage.getItem("perfil");
 
         try {
           let snapshot;
@@ -1433,7 +1556,7 @@ window.onpopstate = function () {
           } else {
             snapshot = await database.ref("rotas")
               .orderByChild("empresa_id")
-              .equalTo(getEmpresaId())
+              .equalTo(localStorage.getItem("empresa_id"))
               .once("value");
           }
 
@@ -1486,7 +1609,7 @@ window.onpopstate = function () {
             vehicle: normVehicle(d.vehicle),
             freightQuoted: Number(d.quoted),
             carrier: d.carrier || 'Nova transportadora',
-            empresa_id: getEmpresaId(),
+            empresa_id: localStorage.getItem("empresa_id"),
             firebaseId: result.data.id
           });
           alert('✅ Simulação adicionada à base!');
@@ -1830,13 +1953,12 @@ window.onpopstate = function () {
         await carregarRotasIniciais();
         renderAll();
 
-        if (window.location.hash === "#simulacao") {
-          document.querySelectorAll('#mainTabs .tab-btn').forEach((b) => b.classList.remove('active'));
-          document.querySelectorAll('section.panel').forEach((p) => p.classList.remove('active'));
-          const btn = document.querySelector('[data-target="simulador"]');
-          const panel = document.getElementById('panel-simulador');
-          if (btn) btn.classList.add('active');
-          if (panel) panel.classList.add('active');
+        // Se tiver hash, ativa a aba correta
+        if (window.location.hash) {
+          const aba = window.location.hash.replace('#', '');
+          if (['simulador', 'rotas', 'cotacao', 'dashboard', 'parametros'].includes(aba)) {
+            irPara(aba, null);
+          }
         }
       }
 
@@ -1847,17 +1969,5 @@ window.onpopstate = function () {
       }
     })();
   </script>
-  <div class="topbar">
-  <div class="logo">Frete Inteligente</div>
-
-  <div class="menu">
-    <button onclick="abrirAba('dashboard')" class="ativo">Dashboard</button>
-    <button onclick="abrirAba('empresa')">Empresa</button>
-    <button onclick="abrirAba('rotas')">Rotas</button>
-    <button onclick="abrirAba('relatorios')">Relatórios</button>
-  </div>
-
-  <button class="logout" onclick="sair()">Sair</button>
-</div>
 </body>
 </html>
