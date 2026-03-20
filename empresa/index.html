@@ -373,7 +373,7 @@
         </form>
       </div>
 
-      <!-- Aba Usuários (inicialmente oculta) -->
+      <!-- Aba Usuários -->
       <div id="abaUsuarios" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
           <h2>Usuários da Empresa</h2>
@@ -449,7 +449,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    // Configuração do Firebase (use a mesma do projeto)
+    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA6YNz6vagSyIJumrKeY1Ptr_6rTpMMZ_A",
       authDomain: "rota-22c3b.firebaseapp.com",
@@ -462,24 +462,24 @@
     const db = firebase.database();
 
     // Variáveis globais
-    let usuarioAtual = null;
     let empresaId = localStorage.getItem('empresa_id');
     let perfil = localStorage.getItem('perfil');
 
+    console.log('Verificando acesso:', { empresaId, perfil });
+    console.log('Aplicando permissões para:', perfil);
+
     // Redireciona se não estiver logado ou não for admin_empresa
     if (!empresaId || (perfil !== 'admin_empresa' && perfil !== 'admin_plataforma')) {
+      alert('Acesso restrito. Você não tem permissão para acessar esta página.');
       window.location.href = '/Frete-inteligente-/Login/index.html';
     }
 
     // Carregar dados iniciais
     window.onload = function() {
       carregarDadosEmpresa();
-      carregarUsuarios(); // Pré-carrega, mas só mostra se aba usuários estiver ativa
-      document.getElementById('abaDados').style.display = 'block';
-      document.getElementById('abaUsuarios').style.display = 'none';
+      carregarUsuarios(); // pré-carrega
     };
 
-    // Função para alternar abas
     function mudarAba(aba) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('ativo'));
       if (aba === 'dados') {
@@ -494,7 +494,6 @@
       }
     }
 
-    // Carregar dados da empresa
     function carregarDadosEmpresa() {
       showLoading();
       db.ref('empresas/' + empresaId).once('value').then(snap => {
@@ -514,7 +513,6 @@
       });
     }
 
-    // Salvar dados da empresa
     function salvarDadosEmpresa() {
       const dados = {
         nome_fantasia: document.getElementById('razaoSocial').value,
@@ -531,7 +529,6 @@
       });
     }
 
-    // Carregar usuários da empresa
     function carregarUsuarios() {
       const tbody = document.getElementById('usuariosTableBody');
       tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
@@ -545,7 +542,6 @@
         }
         Object.keys(usuarios).forEach(uid => {
           const u = usuarios[uid];
-          const row = document.createElement('tr');
           const statusClass = u.status === 'ativo' ? 'ativo' : 'pendente';
           const statusText = u.status === 'ativo' ? 'Ativo' : 'Pendente';
           let botoes = '';
@@ -554,7 +550,7 @@
           } else {
             botoes = `<button class="btn-danger" onclick="suspenderUsuario('${uid}')">Suspender</button>`;
           }
-          // Não permite suspender o próprio admin principal? Pode, mas cuidado.
+          const row = document.createElement('tr');
           row.innerHTML = `
             <td>${u.nome || '---'}</td>
             <td>${u.email}</td>
@@ -570,7 +566,6 @@
       });
     }
 
-    // Aprovar usuário
     function aprovarUsuario(uid) {
       if (!confirm('Deseja aprovar este usuário?')) return;
       showLoading();
@@ -584,7 +579,6 @@
       });
     }
 
-    // Suspender usuário
     function suspenderUsuario(uid) {
       if (!confirm('Deseja suspender este usuário?')) return;
       showLoading();
@@ -598,15 +592,14 @@
       });
     }
 
-    // Modal novo usuário
     function abrirModalNovoUsuario() {
       document.getElementById('modalNovoUsuario').classList.add('active');
     }
+
     function fecharModalNovoUsuario() {
       document.getElementById('modalNovoUsuario').classList.remove('active');
     }
 
-    // Criar usuário
     async function criarUsuario() {
       const nome = document.getElementById('novoNome').value.trim();
       const email = document.getElementById('novoEmail').value.trim();
@@ -625,11 +618,9 @@
 
       showLoading();
       try {
-        // Cria usuário no Auth
         const cred = await auth.createUserWithEmailAndPassword(email, senha);
         const uid = cred.user.uid;
 
-        // Salva no banco
         await db.ref('usuarios/' + uid).set({
           nome: nome,
           email: email,
@@ -639,7 +630,6 @@
           data_cadastro: Date.now()
         });
 
-        // Atualiza contador de usuários ativos na empresa (opcional)
         if (status === 'ativo') {
           const snap = await db.ref('empresas/' + empresaId + '/usuarios_ativos').once('value');
           const atuais = snap.val() || 0;
@@ -650,7 +640,6 @@
         alert('✅ Usuário criado com sucesso!');
         fecharModalNovoUsuario();
         carregarUsuarios();
-        // Limpa campos
         document.getElementById('novoNome').value = '';
         document.getElementById('novoEmail').value = '';
         document.getElementById('novoSenha').value = '';
@@ -660,7 +649,6 @@
       }
     }
 
-    // Logout
     function sair() {
       auth.signOut().then(() => {
         localStorage.clear();
@@ -668,7 +656,6 @@
       });
     }
 
-    // Utilitários
     function showLoading() {
       document.getElementById('loading').classList.add('active');
     }
@@ -676,7 +663,6 @@
       document.getElementById('loading').classList.remove('active');
     }
 
-    // Fechar modal ao clicar fora
     window.onclick = function(event) {
       const modal = document.getElementById('modalNovoUsuario');
       if (event.target === modal) fecharModalNovoUsuario();
